@@ -1,6 +1,6 @@
 import io from "socket.io-client";
 
-const SOCKET_URL = "https://studysync-api.onrender.com"; // replace with *your* deployed backend URL
+const SOCKET_URL = "https://studysync-mmo6.onrender.com";  // correct backend with socket
 
 let socket = null;
 
