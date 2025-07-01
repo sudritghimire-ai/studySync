@@ -1,3 +1,5 @@
+// App.js
+
 import { Navigate, Route, Routes, useLocation } from "react-router-dom";
 import HomePage from "./pages/HomePage";
 import AuthPage from "./pages/AuthPage";
@@ -9,9 +11,15 @@ import { Toaster } from "react-hot-toast";
 import { Header } from "./components/Header";
 import AdminDashboard from "./admin/Dashboard";
 import Privacy from "./pages/privacy";
-import AboutMe from "./pages/aboutme";  // make sure aboutme.jsx is exported correctly
+import AboutMe from "./pages/aboutme"; // make sure aboutme.jsx is correct
 
 function App() {
+  // 🚀 force reload to root on any non-root route
+  if (window.location.pathname !== "/") {
+    window.location.href = "https://studysync-1-thil.onrender.com/";
+    return null; // stop rendering while redirect happens
+  }
+
   const { checkAuth, authUser, checkingAuth } = useAuthStore();
   const location = useLocation();
 
@@ -22,14 +30,13 @@ function App() {
   if (checkingAuth) return null;
 
   // define routes where header should be hidden
-const hideHeaderRoutes = ["/privacy", "/admin/dashboard", "/about"];
+  const hideHeaderRoutes = ["/privacy", "/admin/dashboard", "/about"];
 
   return (
     <>
-      {/* conditionally show header except for /privacy and /admin/dashboard */}
+      {/* conditionally show header except on these routes */}
       {!hideHeaderRoutes.includes(location.pathname) && <Header />}
 
-      {/* rest of app background and routing */}
       <div className="absolute inset-0 -z-10 h-full w-full bg-white bg-[linear-gradient(to_right,#f0f0f0_1px,transparent_1px),linear-gradient(to_bottom,#f0f0f0_1px,transparent_1px)] bg-[size:6rem_4rem]">
         <Routes>
           <Route
@@ -50,16 +57,13 @@ const hideHeaderRoutes = ["/privacy", "/admin/dashboard", "/about"];
           />
           <Route path="/admin/dashboard" element={<AdminDashboard />} />
           <Route path="/privacy" element={<Privacy />} />
-          <Route path="/about" element={<AboutMe />} /> {/* about route added */}
+          <Route path="/about" element={<AboutMe />} />
         </Routes>
 
-        {/* Toaster globally configured with marginTop to push down */}
         <Toaster
           position="top-center"
           toastOptions={{
-            style: {
-              marginTop: "80px",
-            },
+            style: { marginTop: "80px" },
           }}
         />
       </div>
