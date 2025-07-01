@@ -45,15 +45,17 @@ app.use("/api/matches", matchRoutes);
 app.use("/api/messages", messageRoutes);
 app.use("/api/admin", adminRoutes);
 
-if (process.env.NODE_ENV !== "production") {
+if (process.env.NODE_ENV === "production") {
+  const buildPath = path.join(__dirname, "client", "dist");
+  app.use(express.static(buildPath));
+
+  app.get("*", (req, res) => {
+    res.sendFile(path.join(buildPath, "index.html"));
+  });
+} else {
   app.get("/", (req, res) => {
     res.send("API is running...");
   });
-} else {
-  app.use(express.static(path.join(__dirname, "/client/dist")));
-  app.get("*", (req, res) =>
-    res.sendFile(path.resolve(__dirname, "client", "dist", "index.html"))
-  );
 }
 
 httpServer.listen(PORT, () => {
