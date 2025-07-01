@@ -26,8 +26,7 @@ const AdminDashboard = () => {
     setLoading(true)
     setError("")
     try {
-     await axios.post(`${process.env.REACT_APP_API_URL}/api/admin/verify`, { code }, { withCredentials: true })
-
+      await axios.post(`${process.env.REACT_APP_API_URL}/api/admin/verify`, { code }, { withCredentials: true })
       setAuthorized(true)
       localStorage.setItem("authorized", "true")
       fetchUsers()
@@ -38,12 +37,10 @@ const AdminDashboard = () => {
     }
   }
 
-
   const fetchUsers = async () => {
     setLoading(true)
     try {
       const res = await axios.get(`${process.env.REACT_APP_API_URL}/api/admin/users`, { withCredentials: true })
-
       setUsers(res.data)
     } catch (err) {
       console.error("Error fetching users:", err)
@@ -55,7 +52,7 @@ const AdminDashboard = () => {
 
   const deleteUser = async (id) => {
     try {
-await axios.delete(`${process.env.REACT_APP_API_URL}/api/admin/users/${id}`, { withCredentials: true })
+      await axios.delete(`${process.env.REACT_APP_API_URL}/api/admin/users/${id}`, { withCredentials: true })
       fetchUsers()
       setDeleteDialogOpen(false)
       setUserToDelete(null)
@@ -80,9 +77,8 @@ await axios.delete(`${process.env.REACT_APP_API_URL}/api/admin/users/${id}`, { w
 
   useEffect(() => {
     if (authorized) {
-     axios
-  .get(`${process.env.REACT_APP_API_URL}/api/admin/check`, { withCredentials: true })
-
+      axios
+        .get(`${process.env.REACT_APP_API_URL}/api/admin/check`, { withCredentials: true })
         .then(() => {
           fetchUsers()
         })
@@ -341,6 +337,7 @@ await axios.delete(`${process.env.REACT_APP_API_URL}/api/admin/users/${id}`, { w
         )}
       </div>
 
+      </div>
       <ToastContainer
         position="top-right"
         autoClose={3000}
