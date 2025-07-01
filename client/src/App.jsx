@@ -9,14 +9,18 @@ import { Toaster } from "react-hot-toast";
 import { Header } from "./components/Header";
 import AdminDashboard from "./admin/Dashboard";
 import Privacy from "./pages/privacy";
-import AboutMe from "./pages/aboutme"; // make sure AboutMe export is correct
+import AboutMe from "./pages/aboutme";
 
-// 🚀 detect reload and redirect if needed
+// 🚀 sessionStorage logic
 if (
-  performance.getEntriesByType("navigation")[0]?.type === "reload" &&
-  window.location.pathname !== "/"
+  window.location.pathname !== "/" &&
+  sessionStorage.getItem("visitedOnce")
 ) {
+  console.log("Detected reload, forcing redirect to /");
   window.location.href = "https://studysync-1-thil.onrender.com/";
+} else {
+  // first navigation
+  sessionStorage.setItem("visitedOnce", "true");
 }
 
 function App() {
@@ -33,7 +37,6 @@ function App() {
 
   return (
     <>
-      {/* conditionally show header except for these routes */}
       {!hideHeaderRoutes.includes(location.pathname) && <Header />}
 
       <div className="absolute inset-0 -z-10 h-full w-full bg-white bg-[linear-gradient(to_right,#f0f0f0_1px,transparent_1px),linear-gradient(to_bottom,#f0f0f0_1px,transparent_1px)] bg-[size:6rem_4rem]">
