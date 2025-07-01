@@ -11,18 +11,6 @@ import AdminDashboard from "./admin/Dashboard";
 import Privacy from "./pages/privacy";
 import AboutMe from "./pages/aboutme";
 
-// 🚀 sessionStorage logic
-if (
-  window.location.pathname !== "/" &&
-  sessionStorage.getItem("visitedOnce")
-) {
-  console.log("Detected reload, forcing redirect to /");
-  window.location.href = "https://studysync-1-thil.onrender.com/";
-} else {
-  // first navigation
-  sessionStorage.setItem("visitedOnce", "true");
-}
-
 function App() {
   const { checkAuth, authUser, checkingAuth } = useAuthStore();
   const location = useLocation();
