@@ -55,7 +55,7 @@ const AdminDashboard = () => {
 
   const deleteUser = async (id) => {
     try {
-      await axios.delete(`/api/admin/users/${id}`, { withCredentials: true })
+await axios.delete(`${process.env.REACT_APP_API_URL}/api/admin/users/${id}`, { withCredentials: true })
       fetchUsers()
       setDeleteDialogOpen(false)
       setUserToDelete(null)
