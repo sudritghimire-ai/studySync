@@ -18,24 +18,25 @@ const AdminDashboard = () => {
   const [deleteDialogOpen, setDeleteDialogOpen] = useState(false)
   const [userToDelete, setUserToDelete] = useState(null)
 
-  const handleEnter = async () => {
-    if (!code.trim()) {
-      toast.error("Please enter the admin code")
-      return
-    }
-    setLoading(true)
-    setError("")
-    try {
-      await axios.post("/api/admin/verify", { code }, { withCredentials: true })
-      setAuthorized(true)
-      localStorage.setItem("authorized", "true")
-      fetchUsers()
-    } catch (err) {
-      toast.error(err.response?.data?.message || "Invalid admin code")
-    } finally {
-      setLoading(false)
-    }
+ const handleEnter = async () => {
+  if (!code.trim()) {
+    toast.error("Please enter the admin code")
+    return
   }
+  setLoading(true)
+  setError("")
+  try {
+    await axios.post("/api/admin/verify", { code }, { withCredentials: true })
+    setAuthorized(true)
+    localStorage.setItem("authorized", "true")
+    window.location.reload()  // this is the key fix
+  } catch (err) {
+    toast.error(err.response?.data?.message || "Invalid admin code")
+  } finally {
+    setLoading(false)
+  }
+}
+
 
   const fetchUsers = async () => {
     setLoading(true)
