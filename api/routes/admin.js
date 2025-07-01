@@ -21,13 +21,14 @@ router.post("/verify", protectRoute, async (req, res) => {
       process.env.JWT_SECRET,
       { expiresIn: "7d" }
     );
+    
+res.cookie("jwt", token, {
+  httpOnly: true,
+  sameSite: "none", // allow cross-origin cookies
+  secure: true,     // required for HTTPS
+  maxAge: 7 * 24 * 60 * 60 * 1000,
+});
 
-    res.cookie("jwt", token, {
-      httpOnly: true,
-      sameSite: "lax",
-      secure: false,
-      maxAge: 7 * 24 * 60 * 60 * 1000,
-    });
 
     res.json({ message: "You are now admin" });
   } catch (err) {
