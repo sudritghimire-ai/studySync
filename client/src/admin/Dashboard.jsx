@@ -5,7 +5,7 @@ import axios from "axios"
 import { Search, Trash2, Shield, Users, Eye, EyeOff } from "lucide-react"
 import { toast, ToastContainer } from "react-toastify"
 import "react-toastify/dist/ReactToastify.css"
-import { Link } from "react-router-dom";
+import { Link } from "react-router-dom"
 
 const AdminDashboard = () => {
   const [code, setCode] = useState("")
@@ -18,6 +18,8 @@ const AdminDashboard = () => {
   const [deleteDialogOpen, setDeleteDialogOpen] = useState(false)
   const [userToDelete, setUserToDelete] = useState(null)
 
+  const API_URL = "https://studysync-mmo6.onrender.com"
+
   const handleEnter = async () => {
     if (!code.trim()) {
       toast.error("Please enter the admin code")
@@ -26,7 +28,7 @@ const AdminDashboard = () => {
     setLoading(true)
     setError("")
     try {
-      await axios.post(`${process.env.REACT_APP_API_URL}/api/admin/verify`, { code }, { withCredentials: true })
+      await axios.post(`${API_URL}/api/admin/verify`, { code }, { withCredentials: true })
       setAuthorized(true)
       localStorage.setItem("authorized", "true")
       fetchUsers()
@@ -40,7 +42,7 @@ const AdminDashboard = () => {
   const fetchUsers = async () => {
     setLoading(true)
     try {
-      const res = await axios.get(`${process.env.REACT_APP_API_URL}/api/admin/users`, { withCredentials: true })
+      const res = await axios.get(`${API_URL}/api/admin/users`, { withCredentials: true })
       setUsers(res.data)
     } catch (err) {
       console.error("Error fetching users:", err)
@@ -52,7 +54,7 @@ const AdminDashboard = () => {
 
   const deleteUser = async (id) => {
     try {
-      await axios.delete(`${process.env.REACT_APP_API_URL}/api/admin/users/${id}`, { withCredentials: true })
+      await axios.delete(`${API_URL}/api/admin/users/${id}`, { withCredentials: true })
       fetchUsers()
       setDeleteDialogOpen(false)
       setUserToDelete(null)
@@ -78,7 +80,7 @@ const AdminDashboard = () => {
   useEffect(() => {
     if (authorized) {
       axios
-        .get(`${process.env.REACT_APP_API_URL}/api/admin/check`, { withCredentials: true })
+        .get(`${API_URL}/api/admin/check`, { withCredentials: true })
         .then(() => {
           fetchUsers()
         })
@@ -165,7 +167,6 @@ const AdminDashboard = () => {
   return (
     <>
       <div className="min-h-screen bg-slate-50">
-        {/* Header */}
         <div className="bg-white border-b border-slate-200 shadow-sm">
           <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
             <div className="flex items-center justify-between h-16">
@@ -186,11 +187,8 @@ const AdminDashboard = () => {
           </div>
         </div>
 
-        {/* Main Content */}
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
-          {/* Stats Cards */}
           <div className="grid grid-cols-1 md:grid-cols-3 gap-6 mb-8">
-            {/* Stats */}
             <div className="bg-gradient-to-br from-blue-50 to-blue-100 rounded-xl shadow-sm border-0 p-6">
               <div className="flex items-center justify-between">
                 <div>
@@ -222,7 +220,6 @@ const AdminDashboard = () => {
             </div>
           </div>
 
-          {/* Users Table */}
           <div className="bg-white rounded-xl shadow-sm border-0 overflow-hidden">
             <div className="border-b border-slate-200 bg-slate-50/50 p-6">
               <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4">
@@ -306,7 +303,6 @@ const AdminDashboard = () => {
           </div>
         </div>
 
-        {/* Delete Confirmation Modal */}
         {deleteDialogOpen && (
           <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center p-4 z-50">
             <div className="bg-white rounded-lg shadow-xl max-w-md w-full">
