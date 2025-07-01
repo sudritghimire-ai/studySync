@@ -6,7 +6,7 @@ import jwt from "jsonwebtoken";
 const router = express.Router();
 
 // verify admin
-router.post("/verify", protectRoute, async (req, res) => {
+router.post("/verify", async (req, res) => { ... });
   const { code } = req.body;
   const correctCode = process.env.ADMIN_SECRET;
 
