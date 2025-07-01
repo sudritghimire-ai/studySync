@@ -15,7 +15,7 @@ import adminRoutes from "./routes/admin.js";
 // db
 import { connectDB } from "./config/db.js";
 
-// socketc
+// socket
 import { initializeSocket } from "./socket/socket.server.js";
 
 dotenv.config();
@@ -38,7 +38,7 @@ app.use(
 // initialize socket
 initializeSocket(httpServer);
 
-// routes
+// API routes - place BEFORE static middleware
 app.use("/api/auth", authRoutes);
 app.use("/api/users", userRoutes);
 app.use("/api/matches", matchRoutes);
@@ -46,11 +46,13 @@ app.use("/api/messages", messageRoutes);
 app.use("/api/admin", adminRoutes);
 
 if (process.env.NODE_ENV === "production") {
-  const buildPath = path.join(__dirname, "client", "dist");
+  // Use resolved absolute path for build folder
+  const buildPath = path.resolve(__dirname, "client", "dist");
   app.use(express.static(buildPath));
 
+  // Catch all route to serve React app for client-side routing support
   app.get("*", (req, res) => {
-    res.sendFile(path.join(buildPath, "index.html"));
+    res.sendFile(path.resolve(buildPath, "index.html"));
   });
 } else {
   app.get("/", (req, res) => {
