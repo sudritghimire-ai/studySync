@@ -80,8 +80,9 @@ const AdminDashboard = () => {
 
   useEffect(() => {
     if (authorized) {
-      axios
-        .get("/api/admin/check", { withCredentials: true })
+     axios
+  .get(`${process.env.REACT_APP_API_URL}/api/admin/check`, { withCredentials: true })
+
         .then(() => {
           fetchUsers()
         })
