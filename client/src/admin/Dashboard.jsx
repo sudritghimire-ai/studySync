@@ -71,7 +71,7 @@ const AdminDashboard = () => {
     ? users.filter(
         (u) =>
           u.name.toLowerCase().includes(searchTerm.toLowerCase()) ||
-          u.email.toLowerCase().includes(searchTerm.toLowerCase()),
+          u.email.toLowerCase().includes(searchTerm.toLowerCase())
       )
     : []
 
@@ -190,6 +190,7 @@ const AdminDashboard = () => {
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
           {/* Stats Cards */}
           <div className="grid grid-cols-1 md:grid-cols-3 gap-6 mb-8">
+            {/* Stats */}
             <div className="bg-gradient-to-br from-blue-50 to-blue-100 rounded-xl shadow-sm border-0 p-6">
               <div className="flex items-center justify-between">
                 <div>
@@ -337,7 +338,6 @@ const AdminDashboard = () => {
         )}
       </div>
 
-      </div>
       <ToastContainer
         position="top-right"
         autoClose={3000}
