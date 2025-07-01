@@ -41,7 +41,8 @@ const AdminDashboard = () => {
   const fetchUsers = async () => {
     setLoading(true)
     try {
-      const res = await axios.get("/api/admin/users", { withCredentials: true })
+      const res = await axios.get(`${process.env.REACT_APP_API_URL}/api/admin/users`, { withCredentials: true })
+
       setUsers(res.data)
     } catch (err) {
       console.error("Error fetching users:", err)
