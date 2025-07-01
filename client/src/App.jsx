@@ -1,5 +1,3 @@
-// App.js
-
 import { Navigate, Route, Routes, useLocation } from "react-router-dom";
 import HomePage from "./pages/HomePage";
 import AuthPage from "./pages/AuthPage";
@@ -11,15 +9,17 @@ import { Toaster } from "react-hot-toast";
 import { Header } from "./components/Header";
 import AdminDashboard from "./admin/Dashboard";
 import Privacy from "./pages/privacy";
-import AboutMe from "./pages/aboutme"; // make sure aboutme.jsx is correct
+import AboutMe from "./pages/aboutme"; // make sure AboutMe export is correct
+
+// 🚀 detect reload and redirect if needed
+if (
+  performance.getEntriesByType("navigation")[0]?.type === "reload" &&
+  window.location.pathname !== "/"
+) {
+  window.location.href = "https://studysync-1-thil.onrender.com/";
+}
 
 function App() {
-  // 🚀 force reload to root on any non-root route
-  if (window.location.pathname !== "/") {
-    window.location.href = "https://studysync-1-thil.onrender.com/";
-    return null; // stop rendering while redirect happens
-  }
-
   const { checkAuth, authUser, checkingAuth } = useAuthStore();
   const location = useLocation();
 
@@ -29,31 +29,30 @@ function App() {
 
   if (checkingAuth) return null;
 
-  // define routes where header should be hidden
   const hideHeaderRoutes = ["/privacy", "/admin/dashboard", "/about"];
 
   return (
     <>
-      {/* conditionally show header except on these routes */}
+      {/* conditionally show header except for these routes */}
       {!hideHeaderRoutes.includes(location.pathname) && <Header />}
 
       <div className="absolute inset-0 -z-10 h-full w-full bg-white bg-[linear-gradient(to_right,#f0f0f0_1px,transparent_1px),linear-gradient(to_bottom,#f0f0f0_1px,transparent_1px)] bg-[size:6rem_4rem]">
         <Routes>
           <Route
             path="/"
-            element={authUser ? <HomePage /> : <Navigate to={"/auth"} />}
+            element={authUser ? <HomePage /> : <Navigate to="/auth" />}
           />
           <Route
             path="/auth"
-            element={!authUser ? <AuthPage /> : <Navigate to={"/"} />}
+            element={!authUser ? <AuthPage /> : <Navigate to="/" />}
           />
           <Route
             path="/profile"
-            element={authUser ? <ProfilePage /> : <Navigate to={"/auth"} />}
+            element={authUser ? <ProfilePage /> : <Navigate to="/auth" />}
           />
           <Route
             path="/chat/:id"
-            element={authUser ? <ChatPage /> : <Navigate to={"/auth"} />}
+            element={authUser ? <ChatPage /> : <Navigate to="/auth" />}
           />
           <Route path="/admin/dashboard" element={<AdminDashboard />} />
           <Route path="/privacy" element={<Privacy />} />
