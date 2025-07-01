@@ -4,15 +4,6 @@
     <meta charset="utf-8" />
     <title>StudySync</title>
 
-    <!-- 🚀 force redirect on reload -->
-    <script>
-      const entries = performance.getEntriesByType("navigation");
-      const navType = entries[0]?.type || window.performance?.navigation?.type;
-      const isReload = navType === "reload" || navType === 1;
-      if (isReload && window.location.pathname !== "/") {
-        window.location.href = "/";
-      }
-    </script>
 
     <!-- add your other meta tags, favicon, etc. below -->
   </head>
