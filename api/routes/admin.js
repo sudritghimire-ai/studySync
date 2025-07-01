@@ -5,18 +5,20 @@ import jwt from "jsonwebtoken";
 
 const router = express.Router();
 
-// verify admin — no protectRoute so ANYONE can send code
+// verify admin — NO protectRoute so *anyone* with correct code can become admin
 router.post("/verify", async (req, res) => {
   const { code } = req.body;
   const correctCode = process.env.ADMIN_SECRET;
 
-  try {
-    if (code !== correctCode) {
-      return res.status(403).json({ message: "Invalid admin code" });
-    }
+  if (!code) {
+    return res.status(400).json({ message: "Admin code required" });
+  }
 
-    // note: in verify, there is no req.user since no protectRoute
-    // you must re-use normal token to get user id from cookie
+  if (code !== correctCode) {
+    return res.status(403).json({ message: "Invalid admin code" });
+  }
+
+  try {
     const tokenFromCookie = req.cookies.jwt;
 
     if (!tokenFromCookie) {
@@ -30,7 +32,7 @@ router.post("/verify", async (req, res) => {
       return res.status(401).json({ message: "Invalid token" });
     }
 
-    // re-issue token with isAdmin true
+    // issue new token with isAdmin=true
     const newToken = jwt.sign(
       { id: decoded.id, isAdmin: true },
       process.env.JWT_SECRET,
@@ -44,10 +46,10 @@ router.post("/verify", async (req, res) => {
       maxAge: 7 * 24 * 60 * 60 * 1000,
     });
 
-    res.json({ message: "You are now admin" });
+    return res.json({ message: "You are now admin" });
   } catch (err) {
     console.error("verify admin error:", err);
-    res.status(500).json({ message: "Could not verify admin" });
+    return res.status(500).json({ message: "Could not verify admin" });
   }
 });
 
@@ -86,9 +88,7 @@ router.delete("/users/:id", protectRoute, async (req, res) => {
 
     // normal user can only delete themselves
     if (req.user._id.toString() !== req.params.id) {
-      return res
-        .status(403)
-        .json({ message: "Not authorized to delete this account" });
+      return res.status(403).json({ message: "Not authorized to delete this account" });
     }
 
     await User.findByIdAndDelete(req.user._id);
