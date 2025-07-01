@@ -26,7 +26,8 @@ const AdminDashboard = () => {
     setLoading(true)
     setError("")
     try {
-      await axios.post("/api/admin/verify", { code }, { withCredentials: true })
+     await axios.post(`${process.env.REACT_APP_API_URL}/api/admin/verify`, { code }, { withCredentials: true })
+
       setAuthorized(true)
       localStorage.setItem("authorized", "true")
       fetchUsers()
