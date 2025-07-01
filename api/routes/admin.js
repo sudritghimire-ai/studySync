@@ -10,46 +10,29 @@ router.post("/verify", async (req, res) => {
   const { code } = req.body;
   const correctCode = process.env.ADMIN_SECRET;
 
-  if (!code) {
-    return res.status(400).json({ message: "Admin code required" });
-  }
-
-  if (code !== correctCode) {
-    return res.status(403).json({ message: "Invalid admin code" });
-  }
-
   try {
-    const tokenFromCookie = req.cookies.jwt;
-
-    if (!tokenFromCookie) {
-      return res.status(401).json({ message: "Missing user session" });
+    if (code !== correctCode) {
+      return res.status(403).json({ message: "Invalid admin code" });
     }
 
-    let decoded;
-    try {
-      decoded = jwt.verify(tokenFromCookie, process.env.JWT_SECRET);
-    } catch (err) {
-      return res.status(401).json({ message: "Invalid token" });
-    }
-
-    // issue new token with isAdmin=true
-    const newToken = jwt.sign(
-      { id: decoded.id, isAdmin: true },
+    // issue a *fresh* admin token with no user id
+    const adminToken = jwt.sign(
+      { isAdmin: true },
       process.env.JWT_SECRET,
       { expiresIn: "7d" }
     );
 
-    res.cookie("jwt", newToken, {
+    res.cookie("jwt", adminToken, {
       httpOnly: true,
       sameSite: process.env.NODE_ENV === "production" ? "none" : "lax",
       secure: process.env.NODE_ENV === "production",
       maxAge: 7 * 24 * 60 * 60 * 1000,
     });
 
-    return res.json({ message: "You are now admin" });
+    res.json({ message: "You are now admin" });
   } catch (err) {
     console.error("verify admin error:", err);
-    return res.status(500).json({ message: "Could not verify admin" });
+    res.status(500).json({ message: "Could not verify admin" });
   }
 });
 
@@ -62,7 +45,7 @@ router.get("/users", protectRoute, async (req, res) => {
     const users = await User.find().select("-password");
     res.json(users);
   } catch (err) {
-    console.error("users error", err);
+    console.error("users error:", err);
     res.status(500).json({ message: "Could not fetch users" });
   }
 });
@@ -87,14 +70,16 @@ router.delete("/users/:id", protectRoute, async (req, res) => {
     }
 
     // normal user can only delete themselves
-    if (req.user._id.toString() !== req.params.id) {
-      return res.status(403).json({ message: "Not authorized to delete this account" });
+    if (req.user._id?.toString() !== req.params.id) {
+      return res
+        .status(403)
+        .json({ message: "Not authorized to delete this account" });
     }
 
     await User.findByIdAndDelete(req.user._id);
     res.json({ message: "Your account has been deleted successfully" });
   } catch (err) {
-    console.error("delete error", err);
+    console.error("delete error:", err);
     res.status(500).json({ message: "Could not delete user" });
   }
 });
