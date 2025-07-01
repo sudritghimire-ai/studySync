@@ -1,10 +1,6 @@
 import io from "socket.io-client";
 
-// in development -> localhost
-// in production  -> Render URL
-const SOCKET_URL = import.meta.env.MODE === "development"
-  ? "http://localhost:5000"
-  : "https://studysync-mmo6.onrender.com";
+const SOCKET_URL = "https://studysync-api.onrender.com"; // replace with *your* deployed backend URL
 
 let socket = null;
 
