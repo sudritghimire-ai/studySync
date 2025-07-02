@@ -40,12 +40,17 @@ const ChatPage = () => {
 
 useEffect(() => {
   if (messages.length > 0 && messagesEndRef.current) {
-    messagesEndRef.current.scrollIntoView({
-      behavior: "auto",  // instant jump
-      block: "end",
-    });
+    const scrollTimeout = setTimeout(() => {
+      messagesEndRef.current.scrollIntoView({
+        behavior: "auto",  // instant, no smooth
+        block: "end",
+      });
+    }, 0); // 0–20 ms lets the DOM render
+
+    return () => clearTimeout(scrollTimeout);
   }
 }, [messages.length]);
+
 
 
 
