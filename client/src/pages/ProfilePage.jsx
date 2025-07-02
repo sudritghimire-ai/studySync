@@ -521,9 +521,7 @@ const response = await fetch(`/api/users/me`, {
 
                 {/* Delete Account Section - Only show for authenticated users */}
               
-                    </div>
-                  </div>
-                )}
+                  
               </form>
             </div>
           </div>
