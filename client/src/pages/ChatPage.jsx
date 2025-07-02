@@ -92,7 +92,7 @@ const ChatPage = () => {
       {/* Floating Chat Header Card */}
       <div className="px-4 py-4 sticky top-0 z-20">
         <div className="max-w-3xl mx-auto flex justify-center">
-          <div className="inline-flex items-center justify-between bg-slate-900/80 backdrop-blur-xl border border-slate-700/50 rounded-2xl shadow-xl px-4 py-3 gap-4 min-w-0">
+<div className="inline-flex items-center justify-between bg-slate-900/80 backdrop-blur-xl border border-slate-700/50 rounded-xl shadow-lg px-4 py-3 gap-4 min-w-0">
             {/* Left side - Back button, Avatar, Name & Status */}
             <div className="flex items-center gap-3 min-w-0">
               <Link
@@ -216,7 +216,7 @@ const ChatPage = () => {
         <div className="px-4 py-3">
           <div className="max-w-3xl mx-auto relative">
             {/* Compact background behind input area only */}
-            <div className="absolute inset-0 bg-slate-900/60 backdrop-blur-xl border border-slate-700/50 rounded-xl -mx-4 -my-1"></div>
+<div className="absolute inset-0 bg-slate-900/80 backdrop-blur-xl border border-slate-700/50 rounded-xl shadow-lg"></div>
 
             <div className="relative">
               <MessageInput match={match} />
