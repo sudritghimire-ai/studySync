@@ -92,7 +92,7 @@ const ChatPage = () => {
       {/* Floating Chat Header Card */}
       <div className="px-4 py-4 sticky top-0 z-20">
         <div className="max-w-3xl mx-auto flex justify-center">
-<div className="inline-flex items-center justify-between bg-slate-900/80 backdrop-blur-xl border border-slate-700/50 rounded-xl shadow-lg px-4 py-3 gap-4 min-w-0">
+<div className="w-full max-w-3xl flex items-center justify-between bg-slate-900/80 backdrop-blur-xl border border-slate-700/50 rounded-xl shadow-lg px-4 py-3 gap-4 mx-auto">
             {/* Left side - Back button, Avatar, Name & Status */}
             <div className="flex items-center gap-3 min-w-0">
               <Link
