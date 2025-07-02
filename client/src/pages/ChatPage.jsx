@@ -36,16 +36,14 @@ const ChatPage = () => {
 
     return () => unsubscribeFromMessages()
   }, [getMyMatches, authUser, getMessages, subscribeToMessages, unsubscribeFromMessages, chatUserId])
+
   useEffect(() => {
-  if (messagesEndRef.current) {
-    messagesEndRef.current.scrollIntoView({
-      behavior: "smooth",
-      block: "nearest",
-    });
-  }
-}, [messages]);
+    const timeout = setTimeout(() => {
+      messagesEndRef.current?.scrollIntoView({ behavior: "smooth" })
+    }, 100)
 
-
+    return () => clearTimeout(timeout)
+  }, [messages])
 
   if (isLoadingMyMatches) return <LoadingMessagesUI />
   if (!match) return <MatchNotFound />
@@ -108,8 +106,8 @@ const ChatPage = () => {
       {showOptions && <div className="fixed inset-0 z-10" onClick={() => setShowOptions(false)} />}
 
       {/* Messages Area */}
-<div className="flex-grow w-full relative z-10">
-<div className="flex-1 overflow-y-auto px-4 py-6 space-y-4 scrollbar-thin scrollbar-thumb-purple-600 scrollbar-track-transparent">
+<div className="flex-grow overflow-hidden w-full relative z-10">
+        <div className="h-full overflow-y-auto px-4 py-6 space-y-4 scrollbar-thin scrollbar-thumb-purple-600 scrollbar-track-transparent">
           {messages.length === 0 ? (
             <EmptyChat match={match} />
           ) : (
