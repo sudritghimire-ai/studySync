@@ -156,7 +156,9 @@ const ChatPage = () => {
       </div>
 
       {/* Message container */}
-      <div className="flex flex-col flex-grow relative z-10 max-w-3xl mx-auto w-full overflow-hidden">
+<div
+  className="flex flex-col flex-grow relative z-10 max-w-3xl mx-auto w-full overflow-hidden mt-0"
+>
         <div
           ref={scrollContainerRef}
           className="relative flex-1 overflow-y-auto px-4 lg:px-6 py-6 space-y-1 scrollbar-thin scrollbar-thumb-slate-600/50 scrollbar-track-transparent bg-slate-800/20 border-x-2 border-slate-700/40"
