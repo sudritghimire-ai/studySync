@@ -38,28 +38,18 @@ const ChatPage = () => {
     return () => unsubscribeFromMessages()
   }, [getMyMatches, authUser, getMessages, subscribeToMessages, unsubscribeFromMessages, chatUserId])
 
+  // Reliable scroll to bottom on mount and new messages
   useEffect(() => {
-    if (!messagesEndRef.current) return
-
-    const scrollToBottom = () => {
-      messagesEndRef.current.scrollIntoView({ behavior: "auto", block: "end" })
+    if (messagesEndRef.current) {
+      // Use setTimeout to ensure DOM is fully rendered
+      setTimeout(() => {
+        messagesEndRef.current.scrollIntoView({
+          behavior: "smooth",
+          block: "end",
+        })
+      }, 50)
     }
-
-    scrollToBottom()
-
-    const rafId = requestAnimationFrame(() => {
-      scrollToBottom()
-    })
-
-    const timeoutId = setTimeout(() => {
-      scrollToBottom()
-    }, 100)
-
-    return () => {
-      cancelAnimationFrame(rafId)
-      clearTimeout(timeoutId)
-    }
-  }, [messages.length])
+  }, [messages])
 
   if (isLoadingMyMatches) return <LoadingMessagesUI />
 
@@ -71,10 +61,11 @@ const ChatPage = () => {
   }
 
   const getLastSeenText = () => {
+    // Mock online status - replace with real data
     const isOnline = Math.random() > 0.5
     if (isOnline) return "Online"
 
-    const lastSeen = new Date(Date.now() - Math.random() * 3600000)
+    const lastSeen = new Date(Date.now() - Math.random() * 3600000) // Random time within last hour
     const now = new Date()
     const diffMinutes = Math.floor((now - lastSeen) / (1000 * 60))
 
@@ -100,134 +91,139 @@ const ChatPage = () => {
 
       <Header />
 
-      {/* Floating Chat Header Card */}
-      <div className="px-4 py-4 sticky top-0 z-20">
-        <div className="max-w-3xl mx-auto flex justify-center">
-          <div className="w-full max-w-3xl flex items-center justify-between bg-slate-900/80 backdrop-blur-xl border border-slate-700/50 rounded-xl shadow-lg px-4 py-3 gap-4 mx-auto">
-            {/* Left side - Back button, Avatar, Name & Status */}
-            <div className="flex items-center gap-3 min-w-0">
-              <Link
-                to="/"
-                className="p-1.5 hover:bg-slate-700/50 rounded-lg lg:hidden group transition-all duration-200 flex-shrink-0"
-              >
-                <ArrowLeft size={18} className="text-slate-400 group-hover:text-white" />
-              </Link>
+      {/* Single common container for header, messages, and input */}
+      <div className="max-w-3xl mx-auto w-full flex flex-col flex-grow relative z-10">
+        {/* Floating Chat Header Card */}
+        <div className="px-4 py-4 sticky top-0 z-20">
+          <div className="flex justify-center">
+            <div className="w-full flex items-center justify-between bg-slate-900/80 backdrop-blur-xl border border-slate-700/50 rounded-xl shadow-lg px-4 py-3 gap-4">
+              {/* Left side - Back button, Avatar, Name & Status */}
+              <div className="flex items-center gap-3 min-w-0">
+                <Link
+                  to="/"
+                  className="p-1.5 hover:bg-slate-700/50 rounded-lg lg:hidden group transition-all duration-200 flex-shrink-0"
+                >
+                  <ArrowLeft size={18} className="text-slate-400 group-hover:text-white" />
+                </Link>
 
-              <div className="relative flex-shrink-0">
-                <img
-                  src={match.image || "/avatar.png"}
-                  alt={match.name}
-                  className="w-10 h-10 object-cover rounded-full ring-2 ring-purple-500/30 shadow-md"
-                />
-                <div className="absolute -bottom-0.5 -right-0.5 w-3 h-3 bg-green-400 border-2 border-slate-900 rounded-full" />
-              </div>
+                <div className="relative flex-shrink-0">
+                  <img
+                    src={match.image || "/avatar.png"}
+                    alt={match.name}
+                    className="w-10 h-10 object-cover rounded-full ring-2 ring-purple-500/30 shadow-md"
+                  />
+                  <div className="absolute -bottom-0.5 -right-0.5 w-3 h-3 bg-green-400 border-2 border-slate-900 rounded-full" />
+                </div>
 
-              <div className="flex flex-col min-w-0">
-                <h2 className="text-base font-semibold text-white leading-tight truncate">{match.name}</h2>
-                <div className="flex items-center gap-1">
-                  <Circle size={6} className="text-green-400 fill-current flex-shrink-0" />
-                  <span className="text-xs text-slate-400 truncate">{getLastSeenText()}</span>
+                <div className="flex flex-col min-w-0">
+                  <h2 className="text-base font-semibold text-white leading-tight truncate">{match.name}</h2>
+                  <div className="flex items-center gap-1">
+                    <Circle size={6} className="text-green-400 fill-current flex-shrink-0" />
+                    <span className="text-xs text-slate-400 truncate">{getLastSeenText()}</span>
+                  </div>
                 </div>
               </div>
-            </div>
 
-            {/* Right side - Match badge */}
-            <div className="flex-shrink-0">
-              <div className="px-2.5 py-1 bg-gradient-to-r from-amber-500/20 to-orange-500/20 rounded-full border border-amber-400/20 backdrop-blur-sm">
-                <span className="text-amber-300 text-xs font-medium">Match</span>
+              {/* Right side - Match badge */}
+              <div className="flex-shrink-0">
+                <div className="px-2.5 py-1 bg-gradient-to-r from-amber-500/20 to-orange-500/20 rounded-full border border-amber-400/20 backdrop-blur-sm">
+                  <span className="text-amber-300 text-xs font-medium">Match</span>
+                </div>
               </div>
             </div>
           </div>
         </div>
-      </div>
 
-      {/* Messages Container */}
-      <div className="flex flex-col flex-grow relative z-10 overflow-hidden max-w-3xl mx-auto w-full">
-        {/* Scrollable Messages wrapper with padding and scrollbar */}
-        <div className="flex-1 overflow-y-auto w-full px-4 lg:px-6 py-6 space-y-1 scrollbar-thin scrollbar-thumb-slate-600/50 scrollbar-track-transparent bg-slate-800/20 border-l-2 border-r-2 border-slate-700/40 rounded-lg">
-          {messages.length === 0 ? (
-            <EmptyChat match={match} />
-          ) : (
-            <>
-              {messages.map((msg, index) => {
-                const isOwn = msg.sender === authUser._id
-                const showAvatar = !isOwn && (index === 0 || messages[index - 1]?.sender !== msg.sender)
-                const isLastInGroup = index === messages.length - 1 || messages[index + 1]?.sender !== msg.sender
-                const showTimestamp =
-                  isLastInGroup ||
-                  (index < messages.length - 1 &&
-                    new Date(messages[index + 1]?.createdAt) - new Date(msg.createdAt) > 300000) // 5 minutes
+        {/* Messages Container */}
+        <div className="flex flex-col flex-grow relative z-10 overflow-hidden">
+          <div className="max-w-3xl mx-auto w-full flex flex-col flex-grow">
+            {/* Scrollable Messages wrapper with padding and scrollbar */}
+            <div className="flex-1 overflow-y-auto w-full px-4 lg:px-6 py-6 space-y-1 scrollbar-thin scrollbar-thumb-slate-600/50 scrollbar-track-transparent bg-slate-800/20 border-l-2 border-r-2 border-slate-700/40 rounded-lg mx-4">
+              {messages.length === 0 ? (
+                <EmptyChat match={match} />
+              ) : (
+                <>
+                  {messages.map((msg, index) => {
+                    const isOwn = msg.sender === authUser._id
+                    const showAvatar = !isOwn && (index === 0 || messages[index - 1]?.sender !== msg.sender)
+                    const isLastInGroup = index === messages.length - 1 || messages[index + 1]?.sender !== msg.sender
+                    const showTimestamp =
+                      isLastInGroup ||
+                      (index < messages.length - 1 &&
+                        new Date(messages[index + 1]?.createdAt) - new Date(msg.createdAt) > 300000) // 5 minutes
 
-                return (
-                  <motion.div
-                    key={`${msg._id}-${msg.createdAt}`}
-                    initial={{ opacity: 0, y: 8 }}
-                    animate={{ opacity: 1, y: 0 }}
-                    transition={{ duration: 0.2, ease: "easeOut" }}
-                    className={`group flex items-end gap-3 py-1 px-2 rounded-lg hover:bg-slate-800/20 transition-all duration-150 ${
-                      isOwn ? "justify-end" : "justify-start"
-                    }`}
-                  >
-                    {!isOwn && (
-                      <div className="w-8 flex justify-center">
-                        {showAvatar ? (
-                          <img
-                            src={match.image || "/avatar.png"}
-                            alt={match.name}
-                            className="w-7 h-7 rounded-full ring-1 ring-slate-600/50"
-                          />
-                        ) : null}
-                      </div>
-                    )}
-
-                    <div className={`flex flex-col ${isOwn ? "items-end" : "items-start"} max-w-md lg:max-w-lg`}>
-                      <div
-                        className={`
-                          relative px-4 py-2.5 rounded-2xl shadow-sm border backdrop-blur-sm
-                          transition-all duration-150 group-hover:shadow-md
-                          ${
-                            isOwn
-                              ? "bg-gradient-to-r from-amber-500 to-orange-500 text-white border-amber-400/20 rounded-br-md"
-                              : "bg-slate-800/60 text-slate-100 border-slate-700/40 rounded-bl-md"
-                          }
-                          ${isLastInGroup ? "mb-1" : "mb-0.5"}
-                        `}
+                    return (
+                      <motion.div
+                        key={`${msg._id}-${msg.createdAt}`}
+                        initial={{ opacity: 0, y: 8 }}
+                        animate={{ opacity: 1, y: 0 }}
+                        transition={{ duration: 0.2, ease: "easeOut" }}
+                        className={`group flex items-end gap-3 py-1 px-2 rounded-lg hover:bg-slate-800/20 transition-all duration-150 ${
+                          isOwn ? "justify-end" : "justify-start"
+                        }`}
                       >
-                        <p className="text-sm leading-relaxed break-words">{msg.content}</p>
-                      </div>
+                        {!isOwn && (
+                          <div className="w-8 flex justify-center">
+                            {showAvatar ? (
+                              <img
+                                src={match.image || "/avatar.png"}
+                                alt={match.name}
+                                className="w-7 h-7 rounded-full ring-1 ring-slate-600/50"
+                              />
+                            ) : null}
+                          </div>
+                        )}
 
-                      {showTimestamp && (
-                        <div
-                          className={`flex items-center gap-2 mt-1 px-2 opacity-0 group-hover:opacity-100 transition-opacity duration-200 ${
-                            isOwn ? "flex-row-reverse" : ""
-                          }`}
-                        >
-                          <Clock size={11} className="text-slate-500" />
-                          <span className="text-xs text-slate-500">{formatTime(msg.createdAt)}</span>
-                          {isOwn && (
-                            <div className="flex gap-1">
-                              <div className="w-1 h-1 bg-amber-400/60 rounded-full" />
-                              <div className="w-1 h-1 bg-amber-400/60 rounded-full" />
+                        <div className={`flex flex-col ${isOwn ? "items-end" : "items-start"} max-w-md lg:max-w-lg`}>
+                          <div
+                            className={`
+                      relative px-4 py-2.5 rounded-2xl shadow-sm border backdrop-blur-sm
+                      transition-all duration-150 group-hover:shadow-md
+                      ${
+                        isOwn
+                          ? "bg-gradient-to-r from-amber-500 to-orange-500 text-white border-amber-400/20 rounded-br-md"
+                          : "bg-slate-800/60 text-slate-100 border-slate-700/40 rounded-bl-md"
+                      }
+                      ${isLastInGroup ? "mb-1" : "mb-0.5"}
+                    `}
+                          >
+                            <p className="text-sm leading-relaxed break-words">{msg.content}</p>
+                          </div>
+
+                          {showTimestamp && (
+                            <div
+                              className={`flex items-center gap-2 mt-1 px-2 opacity-0 group-hover:opacity-100 transition-opacity duration-200 ${
+                                isOwn ? "flex-row-reverse" : ""
+                              }`}
+                            >
+                              <Clock size={11} className="text-slate-500" />
+                              <span className="text-xs text-slate-500">{formatTime(msg.createdAt)}</span>
+                              {isOwn && (
+                                <div className="flex gap-1">
+                                  <div className="w-1 h-1 bg-amber-400/60 rounded-full" />
+                                  <div className="w-1 h-1 bg-amber-400/60 rounded-full" />
+                                </div>
+                              )}
                             </div>
                           )}
                         </div>
-                      )}
-                    </div>
-                  </motion.div>
-                )
-              })}
-              <div ref={messagesEndRef} />
-            </>
-          )}
-        </div>
+                      </motion.div>
+                    )
+                  })}
+                  <div ref={messagesEndRef} />
+                </>
+              )}
+            </div>
 
-        {/* Compact Message Input */}
-        <div className="px-4 py-3 max-w-3xl mx-auto relative w-full">
-          {/* Compact background behind input area only */}
-          <div className="absolute inset-0 bg-slate-900/80 backdrop-blur-xl border border-slate-700/50 rounded-xl shadow-lg"></div>
+            {/* Compact Message Input */}
+            <div className="px-4 py-3 relative w-full">
+              {/* Compact background behind input area only */}
+              <div className="absolute inset-0 bg-slate-900/80 backdrop-blur-xl border border-slate-700/50 rounded-xl shadow-lg mx-4"></div>
 
-          <div className="relative">
-            <MessageInput match={match} />
+              <div className="relative mx-4">
+                <MessageInput match={match} />
+              </div>
+            </div>
           </div>
         </div>
       </div>
