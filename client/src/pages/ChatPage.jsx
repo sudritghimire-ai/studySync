@@ -256,7 +256,7 @@ const ChatPage = () => {
 
         {/* Message input */}
         <div className="relative px-4 py-3 max-w-3xl mx-auto w-full">
-<div className="absolute inset-0 bg-slate-900/80 backdrop-blur-xl border border-slate-700/50 shadow-lg"></div>
+<div className="absolute inset-0 bg-slate-900/80 backdrop-blur-xl shadow-lg"></div>
           <div className="relative">
             <MessageInput match={match} />
           </div>
