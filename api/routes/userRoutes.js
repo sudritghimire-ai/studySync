@@ -33,6 +33,12 @@ router.get("/search", protectRoute, async (req, res) => {
 })
 router.get("/unread-senders", protectRoute, async (req, res) => {
   try {
+    // check if user still exists
+    const currentUser = await User.findById(req.user._id);
+    if (!currentUser) {
+      return res.status(401).json({ senders: [] });  // send empty senders safely
+    }
+
     const messages = await Message.find({
       recipient: req.user._id,
       isRead: false
@@ -45,7 +51,7 @@ router.get("/unread-senders", protectRoute, async (req, res) => {
     console.error(err)
     res.status(500).json({ error: "Failed to fetch unread senders" })
   }
-})
+});
 
 // delete own account
 router.delete("/me", protectRoute, async (req, res) => {
