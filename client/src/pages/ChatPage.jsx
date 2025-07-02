@@ -111,11 +111,12 @@ const ChatPage = () => {
               >
                 <ArrowLeft size={18} className="text-slate-400 group-hover:text-white" />
               </button>
-              <div className="relative">
-               
- <img src={match.image || "/avatar.png"} alt={match.name} className="w-10 h-10 rounded-full ring-2 ring-purple-500/30 shadow" />
- <span className="text-sm text-slate-300 font-medium">{match.name}</span>
-              </div>
+          <div className="flex items-center gap-3 min-w-0">
+  <img src={match.image || "/avatar.png"} alt={match.name} className="w-10 h-10 rounded-full ring-2 ring-purple-500/30 shadow flex-shrink-0" />
+  <span className="text-sm text-slate-300 font-medium break-words max-w-[150px]">{match.name}</span>
+</div>
+
+
             </div>
             <div className="flex flex-col items-end relative">
               <motion.button
