@@ -242,10 +242,10 @@ const ChatPage = () => {
 
           {/* Scroll-to-bottom button */}
           {showScrollButton && (
-            <div className="absolute bottom-4 right-4 z-30">
+            <div className="absolute bottom-4 left-4 z-30">
               <button
                 onClick={scrollToBottom}
-                className="px-3 py-2 rounded-full bg-amber-500 hover:bg-amber-600 text-white shadow-lg transition-colors"
+                className="px-3 py-2 rounded-full bg-cyan-500 hover:bg-cyan-600 text-white shadow-lg transition-colors"
               >
                 ↓ Scroll to bottom
               </button>
