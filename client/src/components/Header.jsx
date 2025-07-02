@@ -78,7 +78,7 @@ export const Header = () => {
           </Link>
 
           {/* Mobile Right Section */}
-          <div className="flex items-center gap-3">
+          <div className="flex items-center">
             {/* Hamburger Menu */}
             <div className="relative" ref={mobileMenuRef}>
               <button
@@ -188,15 +188,6 @@ export const Header = () => {
                 )}
               </AnimatePresence>
             </div>
-
-            {/* User Avatar (Mobile) - Keep for visual consistency */}
-            {authUser && (
-              <img
-                src={authUser.image || "/avatar.png"}
-                alt="Profile"
-                className="h-8 w-8 object-cover rounded-full border-2 border-slate-600/50 shadow-lg"
-              />
-            )}
           </div>
         </div>
 
@@ -243,11 +234,6 @@ export const Header = () => {
                   onClick={() => setDropdownOpen(!dropdownOpen)}
                   className="flex items-center gap-3 group focus:outline-none"
                 >
-                  <img
-                    src={authUser.image || "/avatar.png"}
-                    alt="Profile"
-                    className="h-9 w-9 object-cover rounded-full border-2 border-slate-600/50 group-hover:border-blue-400/60 transition-all duration-200 shadow-lg"
-                  />
                   <div className="hidden xl:block text-left">
                     <div className="text-sm font-medium text-slate-200 group-hover:text-blue-200 transition-colors duration-200">
                       {authUser.name}
@@ -262,38 +248,32 @@ export const Header = () => {
                       animate={{ opacity: 1, y: 0, scale: 1 }}
                       exit={{ opacity: 0, y: -10, scale: 0.95 }}
                       transition={{ duration: 0.2 }}
-                      className="absolute right-0 mt-2 w-56 bg-white/98 backdrop-blur-xl border border-slate-200/50 rounded-xl shadow-2xl py-2 z-50"
+                      className="absolute right-0 mt-2 w-56 bg-gradient-to-br from-slate-900/95 via-gray-900/95 to-slate-800/95 backdrop-blur-xl border border-slate-700/50 rounded-xl shadow-2xl py-2 z-50"
                     >
-                      <div className="px-4 py-3 border-b border-slate-200">
-                        <div className="flex items-center gap-3">
-                          <img
-                            src={authUser.image || "/avatar.png"}
-                            alt="Profile"
-                            className="h-10 w-10 object-cover rounded-full border border-slate-200"
-                          />
-                          <div>
-                            <div className="text-sm font-semibold text-slate-900">{authUser.name}</div>
-                            <div className="text-xs text-slate-500">View profile</div>
-                          </div>
-                        </div>
+                      {/* Subtle inner glow */}
+                      <div className="absolute inset-0 bg-gradient-to-br from-blue-500/5 via-transparent to-slate-500/5 rounded-xl pointer-events-none"></div>
+
+                      <div className="relative px-4 py-3 border-b border-slate-700/30">
+                        <div className="text-sm font-semibold text-slate-200">{authUser.name}</div>
+                        <div className="text-xs text-slate-400">View profile</div>
                       </div>
 
-                      <div className="py-1">
+                      <div className="py-1 relative">
                         <Link
                           to="/profile"
-                          className="flex items-center gap-3 px-4 py-2 text-sm text-slate-700 hover:bg-slate-50 transition-colors duration-200"
+                          className="flex items-center gap-3 px-4 py-2 text-sm text-slate-300 hover:text-white hover:bg-slate-700/40 transition-all duration-200"
                           onClick={() => setDropdownOpen(false)}
                         >
                           <User size={16} />
                           My Profile
                         </Link>
-                        <div className="h-px bg-slate-200 mx-2 my-1"></div>
+                        <div className="h-px bg-slate-700/30 mx-2 my-1"></div>
                         <button
                           onClick={() => {
                             logout()
                             setDropdownOpen(false)
                           }}
-                          className="flex w-full text-left items-center gap-3 px-4 py-2 text-sm text-red-600 hover:bg-red-50 transition-colors duration-200"
+                          className="flex w-full text-left items-center gap-3 px-4 py-2 text-sm text-red-400 hover:text-red-300 hover:bg-red-900/20 transition-all duration-200"
                         >
                           <LogOut size={16} />
                           Sign Out
