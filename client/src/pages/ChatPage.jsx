@@ -43,7 +43,7 @@ const ChatPage = () => {
     const handleScroll = () => {
       const diff = container.scrollHeight - container.scrollTop - container.clientHeight;
       console.log("scrollHeight:", container.scrollHeight, "scrollTop:", container.scrollTop, "clientHeight:", container.clientHeight, "diff:", diff);
-      const isAtBottom = diff < 300;
+      const isAtBottom = diff < 10;
       setShowScrollButton(!isAtBottom);
     };
 
