@@ -123,17 +123,7 @@ const ChatPage = () => {
                 ↓ Scroll to Bottom
               </motion.button>
               {/* removed orange match label here */}
-              {showScrollButton && (
-                <motion.button
-                  initial={{ opacity: 0, scale: 0.8 }}
-                  animate={{ opacity: 1, scale: 1 }}
-                  transition={{ duration: 0.3 }}
-                  onClick={scrollToBottom}
-                  className="absolute top-full mt-1 px-2 py-1 text-xs rounded-full bg-cyan-500 hover:bg-cyan-600 text-white shadow"
-                >
-                  ↓ Scroll
-                </motion.button>
-              )}
+             
             </div>
           </div>
         </div>
