@@ -23,9 +23,13 @@ function App() {
 
   const hideHeaderRoutes = ["/privacy", "/admin/dashboard", "/about"];
 
+  // Hide header if pathname matches hideHeaderRoutes OR starts with "/chat/"
+  const shouldHideHeader =
+    hideHeaderRoutes.includes(location.pathname) || location.pathname.startsWith("/chat/");
+
   return (
     <>
-      {!hideHeaderRoutes.includes(location.pathname) && <Header />}
+      {!shouldHideHeader && <Header />}
 
       <div className="absolute inset-0 -z-10 h-full w-full bg-white bg-[linear-gradient(to_right,#f0f0f0_1px,transparent_1px),linear-gradient(to_bottom,#f0f0f0_1px,transparent_1px)] bg-[size:6rem_4rem]">
         <Routes>
