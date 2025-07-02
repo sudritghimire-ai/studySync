@@ -7,7 +7,7 @@ export function useAutoScroll(messages) {
     if (containerRef.current) {
       containerRef.current.scrollTop = containerRef.current.scrollHeight;
     }
-  }, [messages]);
+  }, [messages.length]);
 
   return containerRef;
 }
