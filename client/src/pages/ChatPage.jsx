@@ -39,11 +39,12 @@ const ChatPage = () => {
 useEffect(() => {
   if (messagesEndRef.current) {
     messagesEndRef.current.scrollIntoView({
-      behavior: "auto",  // instant means no smooth scrolling
-      block: "end"
+      behavior: "instant", // or "auto"
+      block: "nearest"
     });
   }
-}, [messages]);
+}, [messages.length]);
+
 
 
   if (isLoadingMyMatches) return <LoadingMessagesUI />
