@@ -112,9 +112,7 @@ const response = await fetch(`/api/users/me`, {
         },
       })
 
-const text = await response.text();
-const data = text ? JSON.parse(text) : {};
-
+      const data = await response.json()
 
       if (!response.ok) {
         throw new Error(data.message || "Failed to delete account")
@@ -122,8 +120,7 @@ const data = text ? JSON.parse(text) : {};
 
       // Clear local auth state
       logout()
-  // ALSO clear the jwt cookie
-      document.cookie = "jwt=; expires=Thu, 01 Jan 1970 00:00:00 UTC; path=/;";
+
       // Clear any localStorage/sessionStorage if you use it
       localStorage.clear()
       sessionStorage.clear()
@@ -501,33 +498,39 @@ const data = text ? JSON.parse(text) : {};
                   </div>
                 </div>
 
-                  {/* Submit Button */}
-<div className={`${isLoaded ? "fade-in-up stagger-7" : "opacity-100"}`}>
-  <button
-    type="submit"
-    disabled={loading}
-    className="w-full premium-button text-white font-semibold py-3 sm:py-4 px-6 rounded-xl disabled:opacity-50 disabled:cursor-not-allowed flex items-center justify-center gap-3 text-sm sm:text-base min-h-[48px]"
-  >
-    {loading ? (
-      <>
-        <div className="w-5 h-5 border-2 border-white/30 border-t-white rounded-full animate-spin" />
-        Saving Profile...
-      </>
-    ) : (
-      <>
-        <Upload className="w-4 h-4 sm:w-5 sm:h-5" />
-        Save Academic Profile
-      </>
-    )}
-  </button>
-</div>
-</form> {/* ✅ closes the form properly */}
-</div> {/* closes glassmorphism-card */}
-</div> {/* closes form-content */}
-</div> {/* closes form-container */}
-</>
+                {/* Submit Button */}
+                <div className={`${isLoaded ? "fade-in-up stagger-7" : "opacity-100"}`}>
+                  <button
+                    type="submit"
+                    disabled={loading}
+                    className="w-full premium-button text-white font-semibold py-3 sm:py-4 px-6 rounded-xl disabled:opacity-50 disabled:cursor-not-allowed flex items-center justify-center gap-3 text-sm sm:text-base min-h-[48px]"
+                  >
+                    {loading ? (
+                      <>
+                        <div className="w-5 h-5 border-2 border-white/30 border-t-white rounded-full animate-spin" />
+                        Saving Profile...
+                      </>
+                    ) : (
+                      <>
+                        <Upload className="w-4 h-4 sm:w-5 sm:h-5" />
+                        Save Academic Profile
+                      </>
+                    )}
+                  </button>
+                </div>
+
+                {/* Delete Account Section - Only show for authenticated users */}
+              
+                    </div>
+                  </div>
+                )}
+              </form>
+            </div>
+          </div>
+        </div>
+      </div>
+    </>
   )
 }
 
 export default ProfilePage
-
