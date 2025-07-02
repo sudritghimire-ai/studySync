@@ -21,6 +21,7 @@ const ChatPage = () => {
   const [hasInitiallyScrolled, setHasInitiallyScrolled] = useState(false)
 
   const match = matches.find((m) => m?._id === chatUserId)
+const scrollContainerRef = useRef(null);
 
   useEffect(() => {
     if (chatUserId) {
@@ -38,31 +39,9 @@ const ChatPage = () => {
     return () => unsubscribeFromMessages()
   }, [getMyMatches, authUser, getMessages, subscribeToMessages, unsubscribeFromMessages, chatUserId])
 useEffect(() => {
-  if (!messagesEndRef.current) return;
-
-  // Scroll function
-  const scrollToBottom = () => {
-    messagesEndRef.current.scrollIntoView({ behavior: "auto", block: "end" });
-  };
-
-  // Call once immediately
-  scrollToBottom();
-
-  // Schedule with requestAnimationFrame (next paint)
-  let rafId = requestAnimationFrame(() => {
-    scrollToBottom();
-  });
-
-  // Schedule again after 100ms to catch any late DOM changes
-  let timeoutId = setTimeout(() => {
-    scrollToBottom();
-  }, 100);
-
-  // Cleanup on unmount or messages change
-  return () => {
-    cancelAnimationFrame(rafId);
-    clearTimeout(timeoutId);
-  };
+  if (scrollContainerRef.current) {
+    scrollContainerRef.current.scrollTop = scrollContainerRef.current.scrollHeight;
+  }
 }, [messages.length]);
 
 
@@ -152,7 +131,10 @@ useEffect(() => {
       {/* Messages Container */}
       <div className="flex flex-col flex-grow relative z-10 overflow-hidden">
         {/* Scrollable Messages */}
-        <div className="flex-1 overflow-y-auto px-4 lg:px-6 py-6 space-y-1 scrollbar-thin scrollbar-thumb-slate-600/50 scrollbar-track-transparent">
+<div
+  ref={scrollContainerRef}
+  className="flex-1 overflow-y-auto px-4 lg:px-6 py-6 space-y-1 scrollbar-thin scrollbar-thumb-slate-600/50 scrollbar-track-transparent"
+>
           <div className="max-w-3xl mx-auto">
             {messages.length === 0 ? (
               <EmptyChat match={match} />
