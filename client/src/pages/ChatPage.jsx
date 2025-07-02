@@ -18,6 +18,7 @@ const ChatPage = () => {
   const { authUser } = useAuthStore()
   const messagesEndRef = useRef(null)
   const [showOptions, setShowOptions] = useState(false)
+  const [hasInitiallyScrolled, setHasInitiallyScrolled] = useState(false)
 
   const match = matches.find((m) => m?._id === chatUserId)
 
@@ -37,17 +38,16 @@ const ChatPage = () => {
     return () => unsubscribeFromMessages()
   }, [getMyMatches, authUser, getMessages, subscribeToMessages, unsubscribeFromMessages, chatUserId])
 
- useEffect(() => {
-  if (messagesEndRef.current) {
-    messagesEndRef.current.scrollIntoView({
-     behavior: "auto",
-block: "end"
-
-    });
-  }
-}, [messages.length]);
-
-
+  // Initial scroll to bottom when messages first load
+  useEffect(() => {
+    if (messages.length > 0 && messagesEndRef.current && !hasInitiallyScrolled) {
+      messagesEndRef.current.scrollIntoView({
+        behavior: "auto",
+        block: "end",
+      })
+      setHasInitiallyScrolled(true)
+    }
+  }, [messages.length, hasInitiallyScrolled])
 
   if (isLoadingMyMatches) return <LoadingMessagesUI />
 
@@ -89,35 +89,37 @@ block: "end"
 
       <Header />
 
-      {/* Enhanced Chat Header */}
-      <div className="bg-slate-900/80 backdrop-blur-xl border-b border-slate-700/50 px-6 py-4 sticky top-0 z-20 shadow-lg">
-        <div className="flex items-center justify-between max-w-4xl mx-auto">
-          <div className="flex items-center gap-4">
-            <Link to="/" className="p-2 hover:bg-slate-700/50 rounded-lg lg:hidden group transition-all duration-200">
-              <ArrowLeft size={20} className="text-slate-400 group-hover:text-white" />
+      {/* Compact Chat Header */}
+      <div className="bg-slate-900/80 backdrop-blur-xl border-b border-slate-700/50 px-4 py-3 sticky top-0 z-20 shadow-lg">
+        <div className="max-w-3xl mx-auto flex items-center justify-between">
+          {/* Left side - Back button, Avatar, Name & Status */}
+          <div className="flex items-center gap-3">
+            <Link to="/" className="p-1.5 hover:bg-slate-700/50 rounded-lg lg:hidden group transition-all duration-200">
+              <ArrowLeft size={18} className="text-slate-400 group-hover:text-white" />
             </Link>
 
             <div className="relative">
               <img
                 src={match.image || "/avatar.png"}
                 alt={match.name}
-                className="w-11 h-11 object-cover rounded-full ring-2 ring-purple-500/30 shadow-md"
+                className="w-10 h-10 object-cover rounded-full ring-2 ring-purple-500/30 shadow-md"
               />
-              <div className="absolute -bottom-0.5 -right-0.5 w-3.5 h-3.5 bg-green-400 border-2 border-slate-900 rounded-full" />
+              <div className="absolute -bottom-0.5 -right-0.5 w-3 h-3 bg-green-400 border-2 border-slate-900 rounded-full" />
             </div>
 
-            <div className="flex flex-col">
-              <h2 className="text-lg font-semibold text-white leading-tight">{match.name}</h2>
-              <div className="flex items-center gap-1.5">
-                <Circle size={8} className="text-green-400 fill-current" />
-                <span className="text-sm text-slate-400">{getLastSeenText()}</span>
+            <div className="flex flex-col min-w-0">
+              <h2 className="text-base font-semibold text-white leading-tight truncate">{match.name}</h2>
+              <div className="flex items-center gap-1">
+                <Circle size={6} className="text-green-400 fill-current flex-shrink-0" />
+                <span className="text-xs text-slate-400 truncate">{getLastSeenText()}</span>
               </div>
             </div>
           </div>
 
-          <div className="flex items-center gap-3">
-            <div className="px-3 py-1.5 bg-gradient-to-r from-amber-500/20 to-orange-500/20 rounded-full border border-amber-400/20 backdrop-blur-sm">
-              <span className="text-amber-300 text-sm font-medium">Match</span>
+          {/* Right side - Match badge */}
+          <div className="flex-shrink-0">
+            <div className="px-2.5 py-1 bg-gradient-to-r from-amber-500/20 to-orange-500/20 rounded-full border border-amber-400/20 backdrop-blur-sm">
+              <span className="text-amber-300 text-xs font-medium">Match</span>
             </div>
           </div>
         </div>
@@ -127,7 +129,7 @@ block: "end"
       <div className="flex flex-col flex-grow relative z-10 overflow-hidden">
         {/* Scrollable Messages */}
         <div className="flex-1 overflow-y-auto px-4 lg:px-6 py-6 space-y-1 scrollbar-thin scrollbar-thumb-slate-600/50 scrollbar-track-transparent">
-          <div className="max-w-4xl mx-auto">
+          <div className="max-w-3xl mx-auto">
             {messages.length === 0 ? (
               <EmptyChat match={match} />
             ) : (
@@ -205,9 +207,9 @@ block: "end"
           </div>
         </div>
 
-        {/* Enhanced Message Input */}
-        <div className="bg-slate-900/60 backdrop-blur-xl border-t border-slate-700/50 px-4 lg:px-6 py-4">
-          <div className="max-w-4xl mx-auto">
+        {/* Compact Message Input */}
+        <div className="bg-slate-900/60 backdrop-blur-xl border-t border-slate-700/50 px-4 py-3">
+          <div className="max-w-3xl mx-auto">
             <MessageInput match={match} />
           </div>
         </div>
