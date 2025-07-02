@@ -5,11 +5,7 @@ import { Link } from "react-router-dom"
 import { Book, User, LogOut, Menu, X, ChevronDown } from "lucide-react"
 import { motion, AnimatePresence } from "framer-motion"
 
-// Mock auth store for demo - replace with your actual store
-const useAuthStore = () => ({
-  authUser: { name: "John Doe", image: "/avatar.png", token: "mock-token" },
-  logout: () => console.log("Logout"),
-})
+import { useAuthStore } from "../store/useAuthStore";
 
 export const Header = () => {
   const { authUser, logout } = useAuthStore()
