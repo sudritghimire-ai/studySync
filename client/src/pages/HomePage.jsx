@@ -43,38 +43,40 @@ const HomePage = () => {
   useEffect(() => {
     const checkNewMessages = async () => {
       try {
-        const res = await fetch("/api/messages/unread-senders", {
-          headers: {
-            Authorization: `Bearer ${authUser?.token}`,
-          },
-        })
+  const res = await fetch("/api/messages/unread-senders", {
+    headers: {
+      Authorization: `Bearer ${authUser?.token}`,
+    },
+  });
 
-        if (!res.ok) throw new Error(`status ${res.status}`)
+  if (!res.ok) {
+    if (res.status === 401) {
+      console.log("User session expired or user deleted — skipping unread check");
+      return;
+    }
+    throw new Error(`Unread check failed with status ${res.status}`);
+  }
 
-        const data = await res.json()
+  const data = await res.json();
 
-        if (data.senders.length > 0) {
-          setHasUnread(true)
+  if (data.senders && data.senders.length > 0) {
+    setHasUnread(true);
+    if (!notifiedOnce) {
+      toast.info("📨 You have new messages!", {
+        position: "top-center",
+        autoClose: 5000,
+        theme: "dark",
+      });
+      setNotifiedOnce(true);
+    }
+  } else {
+    setHasUnread(false);
+  }
+} catch (err) {
+  console.error("Unread check failed", err);
+  setHasUnread(false);
+}
 
-          if (!notifiedOnce) {
-            toast.info("📨 You have new messages!", {
-              position: "top-center",
-
-              autoClose: 5000,
-
-              theme: "dark",
-            })
-
-            setNotifiedOnce(true)
-          }
-        } else {
-          setHasUnread(false)
-        }
-      } catch (err) {
-        console.error("Unread check failed", err)
-
-        setHasUnread(false)
-      }
     }
 
     checkNewMessages()
