@@ -39,17 +39,14 @@ const ChatPage = () => {
   }, [getMyMatches, authUser, getMessages, subscribeToMessages, unsubscribeFromMessages, chatUserId])
 
 useEffect(() => {
-  if (messages.length > 0 && messagesEndRef.current) {
-    const scrollTimeout = setTimeout(() => {
-      messagesEndRef.current.scrollIntoView({
-        behavior: "auto",  // instant, no smooth
-        block: "end",
-      });
-    }, 0); // 0–20 ms lets the DOM render
-
-    return () => clearTimeout(scrollTimeout);
+  // Always scroll to end on mount, even if messages exist immediately
+  if (messagesEndRef.current) {
+    messagesEndRef.current.scrollIntoView({
+      behavior: "auto",
+      block: "end",
+    });
   }
-}, [messages.length]);
+}, []);
 
 
 
