@@ -13,10 +13,10 @@ export const protectRoute = async (req, res, next) => {
 
     const decoded = jwt.verify(token, process.env.JWT_SECRET);
 
-   if (decoded.isAdmin) {
-  req.user = { id: decoded.id, isAdmin: true };
-  return next();
-}
+    if (decoded.isAdmin) {
+      req.user = { _id: decoded.id, isAdmin: true }; // ✅ fixed only this line
+      return next();
+    }
 
     const currentUser = await User.findById(decoded.id);
     if (!currentUser) {
