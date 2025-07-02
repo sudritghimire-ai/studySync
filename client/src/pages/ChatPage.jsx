@@ -38,12 +38,18 @@ const ChatPage = () => {
   }, [getMyMatches, authUser, getMessages, subscribeToMessages, unsubscribeFromMessages, chatUserId])
 
   useEffect(() => {
+  if (messages.length > 0 && messagesEndRef.current) {
     const timeout = setTimeout(() => {
-      messagesEndRef.current?.scrollIntoView({ behavior: "smooth" })
-    }, 100)
+      messagesEndRef.current.scrollIntoView({
+        behavior: "smooth",
+        block: "end",
+        inline: "nearest",
+      });
+    }, 300);  // slightly longer to account for slower render
 
-    return () => clearTimeout(timeout)
-  }, [messages])
+    return () => clearTimeout(timeout);
+  }
+}, [messages]);
 
   if (isLoadingMyMatches) return <LoadingMessagesUI />
   if (!match) return <MatchNotFound />
