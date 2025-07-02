@@ -37,24 +37,17 @@ const ChatPage = () => {
 
     return () => unsubscribeFromMessages()
   }, [getMyMatches, authUser, getMessages, subscribeToMessages, unsubscribeFromMessages, chatUserId])
-
-// scroll immediately on first mount (e.g. SSR store hydration)
 useEffect(() => {
   if (messagesEndRef.current) {
-    messagesEndRef.current.scrollIntoView({
-      behavior: "auto",
-      block: "end",
-    });
-  }
-}, []);
+    // Scroll immediately
+    messagesEndRef.current.scrollIntoView({ behavior: "auto", block: "end" });
 
-// scroll on any new messages
-useEffect(() => {
-  if (messagesEndRef.current) {
-    messagesEndRef.current.scrollIntoView({
-      behavior: "auto",
-      block: "end",
-    });
+    // Scroll again after a short delay to ensure layout settled
+    const timeout = setTimeout(() => {
+      messagesEndRef.current.scrollIntoView({ behavior: "auto", block: "end" });
+    }, 200); // 200ms delay, adjust if needed
+
+    return () => clearTimeout(timeout);
   }
 }, [messages.length]);
 
