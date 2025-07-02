@@ -3,6 +3,7 @@
 import { useEffect, useState } from "react"
 
 import Sidebar from "../components/Sidebar"
+import { useSidebarStore } from "../store/useSidebarStore";
 
 import { useMatchStore } from "../store/useMatchStore"
 
@@ -27,6 +28,7 @@ const HomePage = () => {
   const [hasUnread, setHasUnread] = useState(false)
 
   const [notifiedOnce, setNotifiedOnce] = useState(false)
+const { shouldOpenOnHome, openDrawer, setShouldOpenOnHome } = useSidebarStore();
 
   const {
     isLoadingUserProfiles,
@@ -39,6 +41,14 @@ const HomePage = () => {
 
     unsubscribeFromNewMatches,
   } = useMatchStore()
+
+
+useEffect(() => {
+  if (shouldOpenOnHome) {
+    openDrawer();
+    setShouldOpenOnHome(false);  // reset flag
+  }
+}, [shouldOpenOnHome, openDrawer, setShouldOpenOnHome]);
 
   useEffect(() => {
     const checkNewMessages = async () => {
