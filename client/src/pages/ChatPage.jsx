@@ -133,7 +133,12 @@ const ChatPage = () => {
               </div>
             </div>
             <div className="flex flex-col items-end relative">
-              <h2 className="text-base font-semibold text-white truncate">{match.name}</h2>
+<motion.button
+  onClick={scrollToBottom}
+  className="px-2 py-1 rounded bg-cyan-500 hover:bg-cyan-600 text-xs text-white shadow"
+>
+  ↓ Scroll to Bottom
+</motion.button>
               <div className="px-2.5 py-1 bg-gradient-to-r from-amber-500/20 to-orange-500/20 rounded-full border border-amber-400/20 backdrop-blur-sm">
                 <span className="text-amber-300 text-xs font-medium">Match</span>
               </div>
