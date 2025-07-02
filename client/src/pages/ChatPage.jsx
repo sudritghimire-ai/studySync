@@ -142,12 +142,7 @@ const ChatPage = () => {
                 <div className="absolute -bottom-0.5 -right-0.5 w-3 h-3 bg-green-400 border-2 border-slate-900 rounded-full" />
               </div>
               
-              <div className="flex flex-col min-w-0">
-                <div className="flex items-center gap-1">
-                  <Circle size={6} className="text-green-400 fill-current" />
-                  <span className="text-xs text-slate-400">{getLastSeenText()}</span>
-                </div>
-              </div>
+              
             </div>
             
             <div className="flex flex-col items-end">
