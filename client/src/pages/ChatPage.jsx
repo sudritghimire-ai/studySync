@@ -54,14 +54,15 @@ const ChatPage = () => {
   ]);
 
   // bulletproof scroll effect
-  useEffect(() => {
-    if (messagesEndRef.current) {
-      messagesEndRef.current.scrollIntoView({
-        behavior: "smooth",
-        block: "end",
-      });
-    }
-  }, [messages]);
+useEffect(() => {
+  if (messagesEndRef.current) {
+    messagesEndRef.current.scrollIntoView({
+      behavior: "smooth",
+      block: "end",
+    });
+  }
+}, [messages.length]);   // <-- this is the key
+
 
   if (isLoadingMyMatches) return <LoadingMessagesUI />;
   if (!match) return <MatchNotFound />;
