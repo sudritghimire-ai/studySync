@@ -90,7 +90,7 @@ const ChatPage = () => {
 
   const getLastSeenText = () => {
     const isOnline = Math.random() > 0.5;
-    if (isOnline) return "Online";
+    if (isOnline) return "";
     
     const lastSeen = new Date(Date.now() - Math.random() * 3600000);
     const now = new Date();
