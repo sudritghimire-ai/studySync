@@ -89,40 +89,42 @@ const ChatPage = () => {
 
       <Header />
 
-      {/* Compact Chat Header */}
-      <div className="px-4 py-3 sticky top-0 z-20">
-        <div className="max-w-3xl mx-auto flex items-center justify-between">
-          {/* Compact background behind content only */}
-          <div className="absolute inset-0 bg-slate-900/80 backdrop-blur-xl border border-slate-700/50 rounded-xl shadow-lg -mx-4 -my-1"></div>
+      {/* Floating Chat Header Card */}
+      <div className="px-4 py-4 sticky top-0 z-20">
+        <div className="max-w-3xl mx-auto flex justify-center">
+          <div className="inline-flex items-center justify-between bg-slate-900/80 backdrop-blur-xl border border-slate-700/50 rounded-2xl shadow-xl px-4 py-3 gap-4 min-w-0">
+            {/* Left side - Back button, Avatar, Name & Status */}
+            <div className="flex items-center gap-3 min-w-0">
+              <Link
+                to="/"
+                className="p-1.5 hover:bg-slate-700/50 rounded-lg lg:hidden group transition-all duration-200 flex-shrink-0"
+              >
+                <ArrowLeft size={18} className="text-slate-400 group-hover:text-white" />
+              </Link>
 
-          {/* Left side - Back button, Avatar, Name & Status */}
-          <div className="relative flex items-center gap-3">
-            <Link to="/" className="p-1.5 hover:bg-slate-700/50 rounded-lg lg:hidden group transition-all duration-200">
-              <ArrowLeft size={18} className="text-slate-400 group-hover:text-white" />
-            </Link>
+              <div className="relative flex-shrink-0">
+                <img
+                  src={match.image || "/avatar.png"}
+                  alt={match.name}
+                  className="w-10 h-10 object-cover rounded-full ring-2 ring-purple-500/30 shadow-md"
+                />
+                <div className="absolute -bottom-0.5 -right-0.5 w-3 h-3 bg-green-400 border-2 border-slate-900 rounded-full" />
+              </div>
 
-            <div className="relative">
-              <img
-                src={match.image || "/avatar.png"}
-                alt={match.name}
-                className="w-10 h-10 object-cover rounded-full ring-2 ring-purple-500/30 shadow-md"
-              />
-              <div className="absolute -bottom-0.5 -right-0.5 w-3 h-3 bg-green-400 border-2 border-slate-900 rounded-full" />
-            </div>
-
-            <div className="flex flex-col min-w-0">
-              <h2 className="text-base font-semibold text-white leading-tight truncate">{match.name}</h2>
-              <div className="flex items-center gap-1">
-                <Circle size={6} className="text-green-400 fill-current flex-shrink-0" />
-                <span className="text-xs text-slate-400 truncate">{getLastSeenText()}</span>
+              <div className="flex flex-col min-w-0">
+                <h2 className="text-base font-semibold text-white leading-tight truncate">{match.name}</h2>
+                <div className="flex items-center gap-1">
+                  <Circle size={6} className="text-green-400 fill-current flex-shrink-0" />
+                  <span className="text-xs text-slate-400 truncate">{getLastSeenText()}</span>
+                </div>
               </div>
             </div>
-          </div>
 
-          {/* Right side - Match badge */}
-          <div className="relative flex-shrink-0">
-            <div className="px-2.5 py-1 bg-gradient-to-r from-amber-500/20 to-orange-500/20 rounded-full border border-amber-400/20 backdrop-blur-sm">
-              <span className="text-amber-300 text-xs font-medium">Match</span>
+            {/* Right side - Match badge */}
+            <div className="flex-shrink-0">
+              <div className="px-2.5 py-1 bg-gradient-to-r from-amber-500/20 to-orange-500/20 rounded-full border border-amber-400/20 backdrop-blur-sm">
+                <span className="text-amber-300 text-xs font-medium">Match</span>
+              </div>
             </div>
           </div>
         </div>
