@@ -36,12 +36,15 @@ const ChatPage = () => {
     return () => unsubscribeFromMessages()
   }, [getMyMatches, authUser, getMessages, subscribeToMessages, unsubscribeFromMessages, chatUserId])
 
-  useEffect(() => {
-    messagesEndRef.current?.scrollIntoView({
-      behavior: "auto",
+useEffect(() => {
+  if (messagesEndRef.current) {
+    messagesEndRef.current.scrollIntoView({
+      behavior: "auto",  // instant means no smooth scrolling
       block: "end"
-    })
-  }, [messages])
+    });
+  }
+}, [messages]);
+
 
   if (isLoadingMyMatches) return <LoadingMessagesUI />
   if (!match) return <MatchNotFound />
