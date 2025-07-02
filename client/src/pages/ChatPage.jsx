@@ -2,7 +2,7 @@
 
 import { useEffect, useRef, useState } from "react";
 import { useParams, useNavigate } from "react-router-dom";
-import { UserX, ArrowLeft, Clock, MessageCircle, Circle } from "lucide-react";
+import { UserX, ArrowLeft, Clock, MessageCircle } from "lucide-react";
 import { motion } from "framer-motion";
 
 import MessageInput from "../components/MessageInput";
@@ -89,16 +89,6 @@ const ChatPage = () => {
       : date.toLocaleTimeString([], { hour: "2-digit", minute: "2-digit" });
   };
 
-  const getLastSeenText = () => {
-    const isOnline = Math.random() > 0.5;
-    if (isOnline) return "";
-    const lastSeen = new Date(Date.now() - Math.random() * 3600000);
-    const diffMinutes = Math.floor((Date.now() - lastSeen) / 60000);
-    if (diffMinutes < 1) return "Active now";
-    if (diffMinutes < 60) return `Active ${diffMinutes}m ago`;
-    return `Active ${Math.floor(diffMinutes / 60)}h ago`;
-  };
-
   if (isLoadingMyMatches) return <LoadingMessagesUI />;
   if (!match) return <MatchNotFound />;
 
@@ -123,25 +113,16 @@ const ChatPage = () => {
               </button>
               <div className="relative">
                 <img src={match.image || "/avatar.png"} alt={match.name} className="w-10 h-10 rounded-full ring-2 ring-purple-500/30 shadow" />
-                <div className="absolute -bottom-0.5 -right-0.5 w-3 h-3 rounded-full bg-green-400 border-2 border-slate-900"></div>
-              </div>
-              <div className="flex flex-col min-w-0">
-                <div className="flex items-center gap-1">
-                  <Circle size={6} className="text-green-400 fill-current" />
-                  <span className="text-xs text-slate-400">{getLastSeenText()}</span>
-                </div>
               </div>
             </div>
             <div className="flex flex-col items-end relative">
-<motion.button
-  onClick={scrollToBottom}
-  className="px-2 py-1 rounded bg-cyan-500 hover:bg-cyan-600 text-xs text-white shadow"
->
-  ↓ Scroll to Bottom
-</motion.button>
-              <div className="px-2.5 py-1 bg-gradient-to-r from-amber-500/20 to-orange-500/20 rounded-full border border-amber-400/20 backdrop-blur-sm">
-              
-              </div>
+              <motion.button
+                onClick={scrollToBottom}
+                className="px-2 py-1 rounded bg-cyan-500 hover:bg-cyan-600 text-xs text-white shadow"
+              >
+                ↓ Scroll to Bottom
+              </motion.button>
+              {/* removed orange match label here */}
               {showScrollButton && (
                 <motion.button
                   initial={{ opacity: 0, scale: 0.8 }}
@@ -204,7 +185,7 @@ const ChatPage = () => {
                       <p className="text-sm break-words">{msg.content}</p>
                     </div>
                     {showTimestamp && (
-                      <div className={`flex items-center gap-2 mt-1 px-2 opacity-0 group-hover:opacity-100 text-xs text-slate-500`}>
+                      <div className="flex items-center gap-2 mt-1 px-2 opacity-0 group-hover:opacity-100 text-xs text-slate-500">
                         <Clock size={11} />
                         {formatTime(msg.createdAt)}
                       </div>
@@ -238,7 +219,7 @@ const EmptyChat = ({ match }) => (
     <div className="relative z-10 max-w-sm">
       <div className="relative mb-6">
         <img src={match.image || "/avatar.png"} alt={match.name} className="w-20 h-20 rounded-full mx-auto ring-3 ring-purple-500/30 shadow" />
-        <div className="absolute -bottom-1 -right-6 w-3 h-3 bg-green-400 border-2 border-slate-900 rounded-full" />
+        {/* removed green dot */}
       </div>
       <h3 className="text-xl font-semibold text-slate-100 mb-3">
         Start a conversation with{" "}
@@ -259,9 +240,7 @@ const MatchNotFound = () => (
       <UserX size={40} className="mx-auto mb-2" />
       <h2 className="text-xl font-semibold mb-2">Conversation Not Found</h2>
       <button
-        onClick={() => {
-          window.history.back();
-        }}
+        onClick={() => window.history.back()}
         className="mt-2 px-4 py-2 rounded bg-slate-700 hover:bg-slate-600 text-white"
       >
         Go Back
