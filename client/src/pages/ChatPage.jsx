@@ -140,7 +140,7 @@ const ChatPage = () => {
   ↓ Scroll to Bottom
 </motion.button>
               <div className="px-2.5 py-1 bg-gradient-to-r from-amber-500/20 to-orange-500/20 rounded-full border border-amber-400/20 backdrop-blur-sm">
-                <span className="text-amber-300 text-xs font-medium">Match</span>
+              
               </div>
               {showScrollButton && (
                 <motion.button
