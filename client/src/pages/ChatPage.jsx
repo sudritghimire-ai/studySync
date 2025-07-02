@@ -38,17 +38,31 @@ const ChatPage = () => {
     return () => unsubscribeFromMessages()
   }, [getMyMatches, authUser, getMessages, subscribeToMessages, unsubscribeFromMessages, chatUserId])
 useEffect(() => {
-  if (messagesEndRef.current) {
-    // Scroll immediately
+  if (!messagesEndRef.current) return;
+
+  // Scroll function
+  const scrollToBottom = () => {
     messagesEndRef.current.scrollIntoView({ behavior: "auto", block: "end" });
+  };
 
-    // Scroll again after a short delay to ensure layout settled
-    const timeout = setTimeout(() => {
-      messagesEndRef.current.scrollIntoView({ behavior: "auto", block: "end" });
-    }, 200); // 200ms delay, adjust if needed
+  // Call once immediately
+  scrollToBottom();
 
-    return () => clearTimeout(timeout);
-  }
+  // Schedule with requestAnimationFrame (next paint)
+  let rafId = requestAnimationFrame(() => {
+    scrollToBottom();
+  });
+
+  // Schedule again after 100ms to catch any late DOM changes
+  let timeoutId = setTimeout(() => {
+    scrollToBottom();
+  }, 100);
+
+  // Cleanup on unmount or messages change
+  return () => {
+    cancelAnimationFrame(rafId);
+    clearTimeout(timeoutId);
+  };
 }, [messages.length]);
 
 
