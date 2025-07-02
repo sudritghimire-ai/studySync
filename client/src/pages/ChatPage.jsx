@@ -128,7 +128,7 @@ const ChatPage = () => {
             <div className="flex items-center gap-3 min-w-0">
               <Link 
                 to="/" 
-                className="p-1.5 hover:bg-slate-700/50 rounded-lg lg:hidden group transition-all duration-200 flex-shrink-0"
+                className="p-1.5 hover:bg-slate-700/50 rounded-lg group transition-all duration-200 flex-shrink-0"
               >
                 <ArrowLeft size={18} className="text-slate-400 group-hover:text-white" />
               </Link>
@@ -143,7 +143,6 @@ const ChatPage = () => {
               </div>
               
               <div className="flex flex-col min-w-0">
-                <h2 className="text-base font-semibold text-white truncate">{match.name}</h2>
                 <div className="flex items-center gap-1">
                   <Circle size={6} className="text-green-400 fill-current" />
                   <span className="text-xs text-slate-400">{getLastSeenText()}</span>
@@ -151,7 +150,8 @@ const ChatPage = () => {
               </div>
             </div>
             
-            <div>
+            <div className="flex flex-col items-end">
+              <h2 className="text-base font-semibold text-white truncate">{match.name}</h2>
               <div className="px-2.5 py-1 bg-gradient-to-r from-amber-500/20 to-orange-500/20 rounded-full border border-amber-400/20 backdrop-blur-sm">
                 <span className="text-amber-300 text-xs font-medium">Match</span>
               </div>
@@ -242,14 +242,20 @@ const ChatPage = () => {
 
           {/* Scroll-to-bottom button */}
           {showScrollButton && (
-            <div className="absolute bottom-4 left-4 z-30">
+            <motion.div
+              initial={{ opacity: 0, scale: 0.8 }}
+              animate={{ opacity: 1, scale: 1 }}
+              exit={{ opacity: 0, scale: 0.8 }}
+              transition={{ duration: 0.3, ease: "easeOut" }}
+              className="absolute bottom-4 left-4 z-30"
+            >
               <button
                 onClick={scrollToBottom}
                 className="px-3 py-2 rounded-full bg-cyan-500 hover:bg-cyan-600 text-white shadow-lg transition-colors"
               >
                 ↓ Scroll to bottom
               </button>
-            </div>
+            </motion.div>
           )}
         </div>
 
