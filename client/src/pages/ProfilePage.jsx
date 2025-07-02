@@ -501,7 +501,7 @@ const data = text ? JSON.parse(text) : {};
                   </div>
                 </div>
 
-                             {/* Submit Button */}
+                  {/* Submit Button */}
 <div className={`${isLoaded ? "fade-in-up stagger-7" : "opacity-100"}`}>
   <button
     type="submit"
@@ -521,7 +521,6 @@ const data = text ? JSON.parse(text) : {};
     )}
   </button>
 </div>
-  
 </form> {/* ✅ closes the form properly */}
 </div> {/* closes glassmorphism-card */}
 </div> {/* closes form-content */}
@@ -529,4 +528,6 @@ const data = text ? JSON.parse(text) : {};
 </>
   )
 }
+
 export default ProfilePage
+
