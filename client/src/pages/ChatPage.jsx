@@ -38,33 +38,18 @@ const ChatPage = () => {
     return () => unsubscribeFromMessages()
   }, [getMyMatches, authUser, getMessages, subscribeToMessages, unsubscribeFromMessages, chatUserId])
 
+  // Reliable scroll to bottom on mount and new messages
   useEffect(() => {
-    if (!messagesEndRef.current) return
-
-    // Scroll function
-    const scrollToBottom = () => {
-      messagesEndRef.current.scrollIntoView({ behavior: "auto", block: "end" })
+    if (messagesEndRef.current) {
+      // Use setTimeout to ensure DOM is fully rendered
+      setTimeout(() => {
+        messagesEndRef.current.scrollIntoView({
+          behavior: "smooth",
+          block: "end",
+        })
+      }, 50)
     }
-
-    // Call once immediately
-    scrollToBottom()
-
-    // Schedule with requestAnimationFrame (next paint)
-    const rafId = requestAnimationFrame(() => {
-      scrollToBottom()
-    })
-
-    // Schedule again after 100ms to catch any late DOM changes
-    const timeoutId = setTimeout(() => {
-      scrollToBottom()
-    }, 100)
-
-    // Cleanup on unmount or messages change
-    return () => {
-      cancelAnimationFrame(rafId)
-      clearTimeout(timeoutId)
-    }
-  }, [messages.length])
+  }, [messages])
 
   if (isLoadingMyMatches) return <LoadingMessagesUI />
 
@@ -106,52 +91,53 @@ const ChatPage = () => {
 
       <Header />
 
-      {/* Floating Chat Header Card */}
-      <div className="px-4 py-4 sticky top-0 z-20">
-        <div className="max-w-3xl mx-auto flex justify-center">
-          <div className="w-full max-w-3xl flex items-center justify-between bg-slate-900/80 backdrop-blur-xl border border-slate-700/50 rounded-xl shadow-lg px-4 py-3 gap-4 mx-auto">
-            {/* Left side - Back button, Avatar, Name & Status */}
-            <div className="flex items-center gap-3 min-w-0">
-              <Link
-                to="/"
-                className="p-1.5 hover:bg-slate-700/50 rounded-lg lg:hidden group transition-all duration-200 flex-shrink-0"
-              >
-                <ArrowLeft size={18} className="text-slate-400 group-hover:text-white" />
-              </Link>
+      {/* Single common container for header, messages, and input */}
+      <div className="max-w-3xl mx-auto w-full flex flex-col flex-grow relative z-10">
+        {/* Floating Chat Header Card */}
+        <div className="px-4 py-4 sticky top-0 z-20">
+          <div className="flex justify-center">
+            <div className="w-full flex items-center justify-between bg-slate-900/80 backdrop-blur-xl border border-slate-700/50 rounded-xl shadow-lg px-4 py-3 gap-4">
+              {/* Left side - Back button, Avatar, Name & Status */}
+              <div className="flex items-center gap-3 min-w-0">
+                <Link
+                  to="/"
+                  className="p-1.5 hover:bg-slate-700/50 rounded-lg lg:hidden group transition-all duration-200 flex-shrink-0"
+                >
+                  <ArrowLeft size={18} className="text-slate-400 group-hover:text-white" />
+                </Link>
 
-              <div className="relative flex-shrink-0">
-                <img
-                  src={match.image || "/avatar.png"}
-                  alt={match.name}
-                  className="w-10 h-10 object-cover rounded-full ring-2 ring-purple-500/30 shadow-md"
-                />
-                <div className="absolute -bottom-0.5 -right-0.5 w-3 h-3 bg-green-400 border-2 border-slate-900 rounded-full" />
-              </div>
+                <div className="relative flex-shrink-0">
+                  <img
+                    src={match.image || "/avatar.png"}
+                    alt={match.name}
+                    className="w-10 h-10 object-cover rounded-full ring-2 ring-purple-500/30 shadow-md"
+                  />
+                  <div className="absolute -bottom-0.5 -right-0.5 w-3 h-3 bg-green-400 border-2 border-slate-900 rounded-full" />
+                </div>
 
-              <div className="flex flex-col min-w-0">
-                <h2 className="text-base font-semibold text-white leading-tight truncate">{match.name}</h2>
-                <div className="flex items-center gap-1">
-                  <Circle size={6} className="text-green-400 fill-current flex-shrink-0" />
-                  <span className="text-xs text-slate-400 truncate">{getLastSeenText()}</span>
+                <div className="flex flex-col min-w-0">
+                  <h2 className="text-base font-semibold text-white leading-tight truncate">{match.name}</h2>
+                  <div className="flex items-center gap-1">
+                    <Circle size={6} className="text-green-400 fill-current flex-shrink-0" />
+                    <span className="text-xs text-slate-400 truncate">{getLastSeenText()}</span>
+                  </div>
                 </div>
               </div>
-            </div>
 
-            {/* Right side - Match badge */}
-            <div className="flex-shrink-0">
-              <div className="px-2.5 py-1 bg-gradient-to-r from-amber-500/20 to-orange-500/20 rounded-full border border-amber-400/20 backdrop-blur-sm">
-                <span className="text-amber-300 text-xs font-medium">Match</span>
+              {/* Right side - Match badge */}
+              <div className="flex-shrink-0">
+                <div className="px-2.5 py-1 bg-gradient-to-r from-amber-500/20 to-orange-500/20 rounded-full border border-amber-400/20 backdrop-blur-sm">
+                  <span className="text-amber-300 text-xs font-medium">Match</span>
+                </div>
               </div>
             </div>
           </div>
         </div>
-      </div>
 
-      {/* Messages Container */}
-      <div className="flex flex-col flex-grow relative z-10 overflow-hidden">
-        {/* Scrollable Messages with borders and background */}
-        <div className="flex-1 overflow-y-auto px-4 lg:px-6 py-6 space-y-1 scrollbar-thin scrollbar-thumb-slate-600/50 scrollbar-track-transparent bg-slate-800/20 border-l-2 border-r-2 border-slate-700/40">
-          <div className="max-w-3xl mx-auto">
+        {/* Messages Container */}
+        <div className="flex flex-col flex-grow overflow-hidden">
+          {/* Scrollable Messages with borders and background */}
+          <div className="flex-1 overflow-y-auto px-4 lg:px-6 py-6 space-y-1 scrollbar-thin scrollbar-thumb-slate-600/50 scrollbar-track-transparent bg-slate-800/20 border-l-2 border-r-2 border-slate-700/40">
             {messages.length === 0 ? (
               <EmptyChat match={match} />
             ) : (
@@ -227,16 +213,16 @@ const ChatPage = () => {
               </>
             )}
           </div>
-        </div>
 
-        {/* Compact Message Input */}
-        <div className="px-4 py-3">
-          <div className="max-w-3xl mx-auto relative">
-            {/* Compact background behind input area only */}
-            <div className="absolute inset-0 bg-slate-900/80 backdrop-blur-xl border border-slate-700/50 rounded-xl shadow-lg"></div>
-
+          {/* Compact Message Input */}
+          <div className="px-4 py-3">
             <div className="relative">
-              <MessageInput match={match} />
+              {/* Compact background behind input area only */}
+              <div className="absolute inset-0 bg-slate-900/80 backdrop-blur-xl border border-slate-700/50 rounded-xl shadow-lg"></div>
+
+              <div className="relative">
+                <MessageInput match={match} />
+              </div>
             </div>
           </div>
         </div>
