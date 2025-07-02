@@ -90,10 +90,13 @@ const ChatPage = () => {
       <Header />
 
       {/* Compact Chat Header */}
-      <div className="bg-slate-900/80 backdrop-blur-xl border-b border-slate-700/50 px-4 py-3 sticky top-0 z-20 shadow-lg">
+      <div className="px-4 py-3 sticky top-0 z-20">
         <div className="max-w-3xl mx-auto flex items-center justify-between">
+          {/* Compact background behind content only */}
+          <div className="absolute inset-0 bg-slate-900/80 backdrop-blur-xl border border-slate-700/50 rounded-xl shadow-lg -mx-4 -my-1"></div>
+
           {/* Left side - Back button, Avatar, Name & Status */}
-          <div className="flex items-center gap-3">
+          <div className="relative flex items-center gap-3">
             <Link to="/" className="p-1.5 hover:bg-slate-700/50 rounded-lg lg:hidden group transition-all duration-200">
               <ArrowLeft size={18} className="text-slate-400 group-hover:text-white" />
             </Link>
@@ -117,7 +120,7 @@ const ChatPage = () => {
           </div>
 
           {/* Right side - Match badge */}
-          <div className="flex-shrink-0">
+          <div className="relative flex-shrink-0">
             <div className="px-2.5 py-1 bg-gradient-to-r from-amber-500/20 to-orange-500/20 rounded-full border border-amber-400/20 backdrop-blur-sm">
               <span className="text-amber-300 text-xs font-medium">Match</span>
             </div>
@@ -208,9 +211,14 @@ const ChatPage = () => {
         </div>
 
         {/* Compact Message Input */}
-        <div className="bg-slate-900/60 backdrop-blur-xl border-t border-slate-700/50 px-4 py-3">
-          <div className="max-w-3xl mx-auto">
-            <MessageInput match={match} />
+        <div className="px-4 py-3">
+          <div className="max-w-3xl mx-auto relative">
+            {/* Compact background behind input area only */}
+            <div className="absolute inset-0 bg-slate-900/60 backdrop-blur-xl border border-slate-700/50 rounded-xl -mx-4 -my-1"></div>
+
+            <div className="relative">
+              <MessageInput match={match} />
+            </div>
           </div>
         </div>
       </div>
