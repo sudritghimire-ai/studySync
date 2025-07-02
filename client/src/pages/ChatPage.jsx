@@ -38,15 +38,15 @@ const ChatPage = () => {
     return () => unsubscribeFromMessages()
   }, [getMyMatches, authUser, getMessages, subscribeToMessages, unsubscribeFromMessages, chatUserId])
 
-  // Initial scroll to bottom when messages first load
 useEffect(() => {
   if (messages.length > 0 && messagesEndRef.current) {
     messagesEndRef.current.scrollIntoView({
-      behavior: "auto",
+      behavior: "auto",  // instant jump
       block: "end",
     });
   }
 }, [messages.length]);
+
 
 
   if (isLoadingMyMatches) return <LoadingMessagesUI />
