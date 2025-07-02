@@ -96,26 +96,29 @@ export const Header = () => {
                     animate={{ opacity: 1, y: 0, scale: 1 }}
                     exit={{ opacity: 0, y: -10, scale: 0.95 }}
                     transition={{ duration: 0.2 }}
-                    className="absolute right-0 mt-2 w-64 bg-white/98 backdrop-blur-xl border border-slate-200/50 rounded-xl shadow-2xl py-2 z-50"
+                    className="absolute right-0 mt-2 w-64 bg-gradient-to-br from-slate-900/95 via-gray-900/95 to-slate-800/95 backdrop-blur-xl border border-slate-700/50 rounded-xl shadow-2xl py-2 z-50"
                   >
+                    {/* Subtle inner glow */}
+                    <div className="absolute inset-0 bg-gradient-to-br from-blue-500/5 via-transparent to-slate-500/5 rounded-xl pointer-events-none"></div>
+
                     {/* Navigation Links */}
                     <Link
                       to="/admin/dashboard"
-                      className="flex items-center px-4 py-3 text-sm text-slate-700 hover:bg-slate-50 transition-colors duration-200 border-b border-slate-100"
+                      className="relative flex items-center px-4 py-3 text-sm text-slate-200 hover:text-white hover:bg-slate-700/30 transition-all duration-200 border-b border-slate-700/30"
                       onClick={() => setMobileMenuOpen(false)}
                     >
                       Dashboard
                     </Link>
                     <Link
                       to="/privacy"
-                      className="flex items-center px-4 py-3 text-sm text-slate-700 hover:bg-slate-50 transition-colors duration-200 border-b border-slate-100"
+                      className="relative flex items-center px-4 py-3 text-sm text-slate-200 hover:text-white hover:bg-slate-700/30 transition-all duration-200 border-b border-slate-700/30"
                       onClick={() => setMobileMenuOpen(false)}
                     >
                       Privacy & Policy
                     </Link>
                     <Link
                       to="/about"
-                      className="flex items-center px-4 py-3 text-sm text-slate-700 hover:bg-slate-50 transition-colors duration-200 border-b border-slate-100"
+                      className="relative flex items-center px-4 py-3 text-sm text-slate-200 hover:text-white hover:bg-slate-700/30 transition-all duration-200 border-b border-slate-700/30"
                       onClick={() => setMobileMenuOpen(false)}
                     >
                       About Me
@@ -126,16 +129,9 @@ export const Header = () => {
                       <div className="relative">
                         <button
                           onClick={() => setMobileUserDropdownOpen(!mobileUserDropdownOpen)}
-                          className="flex items-center justify-between w-full px-4 py-3 text-sm text-slate-700 hover:bg-slate-50 transition-colors duration-200 focus:outline-none"
+                          className="relative flex items-center justify-between w-full px-4 py-3 text-sm text-slate-200 hover:text-white hover:bg-slate-700/30 transition-all duration-200 focus:outline-none"
                         >
-                          <div className="flex items-center gap-3">
-                            <img
-                              src={authUser.image || "/avatar.png"}
-                              alt="Profile"
-                              className="h-6 w-6 object-cover rounded-full border border-slate-200"
-                            />
-                            <span className="font-medium">{authUser.name}</span>
-                          </div>
+                          <span className="font-medium">{authUser.name}</span>
                           <ChevronDown
                             className={`w-4 h-4 transition-transform duration-200 ${
                               mobileUserDropdownOpen ? "rotate-180" : ""
@@ -151,11 +147,11 @@ export const Header = () => {
                               animate={{ opacity: 1, height: "auto" }}
                               exit={{ opacity: 0, height: 0 }}
                               transition={{ duration: 0.2 }}
-                              className="overflow-hidden bg-slate-50/50"
+                              className="overflow-hidden bg-slate-800/50 backdrop-blur-sm border-t border-slate-700/30"
                             >
                               <Link
                                 to="/profile"
-                                className="flex items-center gap-3 px-8 py-2.5 text-sm text-slate-600 hover:bg-slate-100 transition-colors duration-200"
+                                className="flex items-center gap-3 px-8 py-2.5 text-sm text-slate-300 hover:text-white hover:bg-slate-700/40 transition-all duration-200"
                                 onClick={() => {
                                   setMobileMenuOpen(false)
                                   setMobileUserDropdownOpen(false)
@@ -170,7 +166,7 @@ export const Header = () => {
                                   setMobileMenuOpen(false)
                                   setMobileUserDropdownOpen(false)
                                 }}
-                                className="flex w-full text-left items-center gap-3 px-8 py-2.5 text-sm text-red-600 hover:bg-red-50 transition-colors duration-200"
+                                className="flex w-full text-left items-center gap-3 px-8 py-2.5 text-sm text-red-400 hover:text-red-300 hover:bg-red-900/20 transition-all duration-200"
                               >
                                 <LogOut size={14} />
                                 Sign Out
@@ -182,7 +178,7 @@ export const Header = () => {
                     ) : (
                       <Link
                         to="/auth"
-                        className="flex items-center px-4 py-3 text-sm text-slate-700 hover:bg-slate-50 transition-colors duration-200"
+                        className="relative flex items-center px-4 py-3 text-sm text-slate-200 hover:text-white hover:bg-slate-700/30 transition-all duration-200"
                         onClick={() => setMobileMenuOpen(false)}
                       >
                         Login
