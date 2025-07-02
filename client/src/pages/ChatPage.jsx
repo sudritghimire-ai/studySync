@@ -108,7 +108,15 @@ const ChatPage = () => {
       {/* Messages Area */}
 {/* Messages Area */}
 <div className="flex-grow w-full relative z-10">
-  <div className="flex-1 overflow-y-auto px-4 py-6 space-y-4 scrollbar-thin scrollbar-thumb-purple-600 scrollbar-track-transparent">
+  <div
+    className="overflow-y-auto px-4 py-6 space-y-4 scrollbar-thin scrollbar-thumb-purple-600 scrollbar-track-transparent"
+    ref={(node) => {
+      if (node) {
+        node.scrollTop = node.scrollHeight;
+      }
+    }}
+  >
+
     {messages.length === 0 ? (
       <EmptyChat match={match} />
     ) : (
