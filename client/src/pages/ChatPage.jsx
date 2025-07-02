@@ -159,7 +159,7 @@ const ChatPage = () => {
       <div className="flex flex-col flex-grow relative z-10 max-w-3xl mx-auto w-full overflow-hidden">
         <div
           ref={scrollContainerRef}
-          className="relative flex-1 overflow-y-auto px-4 lg:px-6 py-6 space-y-1 scrollbar-thin scrollbar-thumb-slate-600/50 scrollbar-track-transparent bg-slate-800/20 border-x-2 border-slate-700/40 rounded-lg"
+          className="relative flex-1 overflow-y-auto px-4 lg:px-6 py-6 space-y-1 scrollbar-thin scrollbar-thumb-slate-600/50 scrollbar-track-transparent bg-slate-800/20 border-x-2 border-slate-700/40"
         >
           {messages.length === 0 ? (
             <EmptyChat match={match} />
@@ -256,7 +256,7 @@ const ChatPage = () => {
 
         {/* Message input */}
         <div className="relative px-4 py-3 max-w-3xl mx-auto w-full">
-          <div className="absolute inset-0 bg-slate-900/80 backdrop-blur-xl border border-slate-700/50 rounded-xl shadow-lg"></div>
+<div className="absolute inset-0 bg-slate-900/80 backdrop-blur-xl border border-slate-700/50 shadow-lg"></div>
           <div className="relative">
             <MessageInput match={match} />
           </div>
