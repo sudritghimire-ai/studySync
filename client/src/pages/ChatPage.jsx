@@ -175,7 +175,8 @@ const ChatPage = () => {
                           : "bg-slate-800/60 text-slate-100 border-slate-700/40 rounded-bl-md"
                       } ${isLastInGroup ? "mb-1" : "mb-0.5"}`}
                     >
-<p className="text-sm break-words" style={{ whiteSpace: "pre-wrap" }}>{msg.content}</p>
+<p className="text-sm break-words break-all"
+ style={{ whiteSpace: "pre-wrap" }}>{msg.content}</p>
                     </div>
                     {showTimestamp && (
                       <div className="flex items-center gap-2 mt-1 px-2 opacity-0 group-hover:opacity-100 text-xs text-slate-500">
