@@ -38,8 +38,8 @@ const ChatPage = () => {
     return () => unsubscribeFromMessages()
   }, [getMyMatches, authUser, getMessages, subscribeToMessages, unsubscribeFromMessages, chatUserId])
 
+// scroll immediately on first mount (e.g. SSR store hydration)
 useEffect(() => {
-  // Always scroll to end on mount, even if messages exist immediately
   if (messagesEndRef.current) {
     messagesEndRef.current.scrollIntoView({
       behavior: "auto",
@@ -47,6 +47,16 @@ useEffect(() => {
     });
   }
 }, []);
+
+// scroll on any new messages
+useEffect(() => {
+  if (messagesEndRef.current) {
+    messagesEndRef.current.scrollIntoView({
+      behavior: "auto",
+      block: "end",
+    });
+  }
+}, [messages.length]);
 
 
 
