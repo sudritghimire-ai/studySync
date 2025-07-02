@@ -36,14 +36,20 @@ const ChatPage = () => {
 
     return () => unsubscribeFromMessages()
   }, [getMyMatches, authUser, getMessages, subscribeToMessages, unsubscribeFromMessages, chatUserId])
-
   useEffect(() => {
-    const timeout = setTimeout(() => {
-      messagesEndRef.current?.scrollIntoView({ behavior: "smooth" })
-    }, 100)
+    if (messages.length > 0) {
+      const raf = requestAnimationFrame(() => {
+        setTimeout(() => {
+          messagesEndRef.current?.scrollIntoView({
+            behavior: "smooth",
+            block: "end",
+          });
+        }, 200); // 200ms to let new messages render
+      });
+      return () => cancelAnimationFrame(raf);
+    }
+  }, [messages]);
 
-    return () => clearTimeout(timeout)
-  }, [messages])
 
   if (isLoadingMyMatches) return <LoadingMessagesUI />
   if (!match) return <MatchNotFound />
