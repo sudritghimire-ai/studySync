@@ -122,7 +122,8 @@ const data = text ? JSON.parse(text) : {};
 
       // Clear local auth state
       logout()
-
+  // ALSO clear the jwt cookie
+      document.cookie = "jwt=; expires=Thu, 01 Jan 1970 00:00:00 UTC; path=/;";
       // Clear any localStorage/sessionStorage if you use it
       localStorage.clear()
       sessionStorage.clear()
