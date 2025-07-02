@@ -106,86 +106,82 @@ const ChatPage = () => {
       {showOptions && <div className="fixed inset-0 z-10" onClick={() => setShowOptions(false)} />}
 
       {/* Messages Area */}
-<div className="flex-grow overflow-hidden w-full relative z-10">
-        <div className="h-full overflow-y-auto px-4 py-6 space-y-4 scrollbar-thin scrollbar-thumb-purple-600 scrollbar-track-transparent">
-          {messages.length === 0 ? (
-            <EmptyChat match={match} />
-          ) : (
-            <>
-              {messages.map((msg, index) => {
-                const isOwn = msg.sender === authUser._id
-                const showAvatar = !isOwn && (index === 0 || messages[index - 1]?.sender !== msg.sender)
-                const isLastInGroup = index === messages.length - 1 || messages[index + 1]?.sender !== msg.sender
+{/* Messages Area */}
+<div className="flex-grow w-full relative z-10">
+  <div className="flex-1 overflow-y-auto px-4 py-6 space-y-4 scrollbar-thin scrollbar-thumb-purple-600 scrollbar-track-transparent">
+    {messages.length === 0 ? (
+      <EmptyChat match={match} />
+    ) : (
+      <>
+        {messages.map((msg, index) => {
+          const isOwn = msg.sender === authUser._id;
+          const showAvatar = !isOwn && (index === 0 || messages[index - 1]?.sender !== msg.sender);
+          const isLastInGroup = index === messages.length - 1 || messages[index + 1]?.sender !== msg.sender;
 
-                return (
-                  <motion.div
-                    key={`${msg._id}-${msg.createdAt}`}
-                    initial={{ opacity: 0, y: 10 }}
-                    animate={{ opacity: 1, y: 0 }}
-transition={{ duration: 0.3 }}
-                    className={`flex items-end gap-3 ${isOwn ? "justify-end" : "justify-start"}`}
-                  >
-                    {!isOwn && (
-                      <div className="w-8 h-8 flex-shrink-0">
-                        {showAvatar && (
-                          <img
-                            src={match.image || "/avatar.png"}
-                            alt={match.name}
-                            className="w-8 h-8 object-cover rounded-full ring-2 ring-purple-600/50 shadow-md"
-                          />
-                        )}
+          return (
+            <motion.div
+              key={`${msg._id}-${msg.createdAt}`}
+              initial={{ opacity: 0, y: 10 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{ duration: 0.3 }}
+              className={`flex items-end gap-3 ${isOwn ? "justify-end" : "justify-start"}`}
+            >
+              {!isOwn && (
+                <div className="w-8 h-8 flex-shrink-0">
+                  {showAvatar && (
+                    <img
+                      src={match.image || "/avatar.png"}
+                      alt={match.name}
+                      className="w-8 h-8 object-cover rounded-full ring-2 ring-purple-600/50 shadow-md"
+                    />
+                  )}
+                </div>
+              )}
+
+              <div className={`flex flex-col ${isOwn ? "items-end" : "items-start"} max-w-xs lg:max-w-md`}>
+                <div
+                  className={`
+                    relative px-4 py-3 rounded-2xl shadow-lg transition-all duration-200 hover:shadow-xl backdrop-blur-sm
+                    ${isOwn
+                      ? "bg-gradient-to-r from-amber-500 to-orange-500 text-white rounded-br-md border border-amber-400/30"
+                      : "bg-purple-800/80 text-purple-100 border border-purple-600/30 rounded-bl-md"}
+                    ${isLastInGroup ? "mb-2" : "mb-1"}
+                  `}
+                >
+                  <p className="text-sm leading-relaxed break-words">{msg.content}</p>
+                  <div
+                    className={`
+                      absolute bottom-0 w-3 h-3 transform rotate-45
+                      ${isOwn
+                        ? "bg-gradient-to-r from-amber-500 to-orange-500 -right-1 border-r border-b border-amber-400/30"
+                        : "bg-purple-800/80 border-r border-b border-purple-600/30 -left-1"}
+                    `}
+                  />
+                </div>
+
+                {isLastInGroup && (
+                  <div className={`flex items-center gap-2 mt-1 px-2 ${isOwn ? "flex-row-reverse" : ""}`}>
+                    <Clock size={12} className="text-purple-400" />
+                    <span className="text-xs text-purple-300">{formatTime(msg.createdAt)}</span>
+                    {isOwn && (
+                      <div className="flex gap-1">
+                        <div className="w-1.5 h-1.5 bg-amber-400 rounded-full animate-pulse" />
+                        <div className="w-1.5 h-1.5 bg-amber-400 rounded-full animate-pulse delay-100" />
                       </div>
                     )}
+                  </div>
+                )}
+              </div>
 
-                    <div className={`flex flex-col ${isOwn ? "items-end" : "items-start"} max-w-xs lg:max-w-md`}>
-                      <div
-                        className={`
-                          relative px-4 py-3 rounded-2xl shadow-lg transition-all duration-200 hover:shadow-xl backdrop-blur-sm
-                          ${
-                            isOwn
-                              ? "bg-gradient-to-r from-amber-500 to-orange-500 text-white rounded-br-md border border-amber-400/30"
-                              : "bg-purple-800/80 text-purple-100 border border-purple-600/30 rounded-bl-md"
-                          }
-                          ${isLastInGroup ? "mb-2" : "mb-1"}
-                        `}
-                      >
-                        <p className="text-sm leading-relaxed break-words">{msg.content}</p>
-
-                        <div
-                          className={`
-                            absolute bottom-0 w-3 h-3 transform rotate-45
-                            ${
-                              isOwn
-                                ? "bg-gradient-to-r from-amber-500 to-orange-500 -right-1 border-r border-b border-amber-400/30"
-                                : "bg-purple-800/80 border-r border-b border-purple-600/30 -left-1"
-                            }
-                          `}
-                        />
-                      </div>
-
-                      {isLastInGroup && (
-                        <div className={`flex items-center gap-2 mt-1 px-2 ${isOwn ? "flex-row-reverse" : ""}`}>
-                          <Clock size={12} className="text-purple-400" />
-                          <span className="text-xs text-purple-300">{formatTime(msg.createdAt)}</span>
-                          {isOwn && (
-                            <div className="flex gap-1">
-                              <div className="w-1.5 h-1.5 bg-amber-400 rounded-full animate-pulse" />
-                              <div className="w-1.5 h-1.5 bg-amber-400 rounded-full animate-pulse delay-100" />
-                            </div>
-                          )}
-                        </div>
-                      )}
-                    </div>
-
-                    {isOwn && <div className="w-8 h-8 flex-shrink-0" />}
-                  </motion.div>
-                )
-              })}
-              <div ref={messagesEndRef} />
-            </>
-          )}
-        </div>
-      </div>
+              {isOwn && <div className="w-8 h-8 flex-shrink-0" />}
+            </motion.div>
+          );
+        })}
+        <div ref={messagesEndRef} />
+      </>
+    )}
+  </div>
+</div>
 
       {/* Message Input */}
     {/* Message Input */}
