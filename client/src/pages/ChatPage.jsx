@@ -122,7 +122,7 @@ const ChatPage = () => {
       <Header />
 
       {/* Floating header card */}
-      <div className="px-4 py-4 sticky top-0 z-20">
+<div className="px-4 py-0 sticky top-0 z-20">
         <div className="max-w-3xl mx-auto flex justify-center">
           <div className="w-full max-w-3xl flex items-center justify-between bg-slate-900/80 backdrop-blur-xl border border-slate-700/50 rounded-t-xl shadow-lg px-4 py-3 gap-4">
             <div className="flex items-center gap-3 min-w-0">
@@ -163,9 +163,10 @@ const ChatPage = () => {
       {/* Message container */}
       <div className="flex flex-col flex-grow relative z-10 max-w-3xl mx-auto w-full overflow-hidden">
         <div
-          ref={scrollContainerRef}
-          className="relative flex-1 overflow-y-auto px-4 lg:px-6 py-6 space-y-1 scrollbar-thin scrollbar-thumb-slate-600/50 scrollbar-track-transparent bg-slate-800/20 border-x-2 border-slate-700/40"
-        >
+  ref={scrollContainerRef}
+  className="relative flex-1 overflow-y-auto px-4 lg:px-6 py-0 space-y-1 scrollbar-thin scrollbar-thumb-slate-600/50 scrollbar-track-transparent bg-slate-800/20 border-x-2 border-slate-700/40"
+>
+
           {messages.length === 0 ? (
             <EmptyChat match={match} />
           ) : (
