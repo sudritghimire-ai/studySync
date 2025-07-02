@@ -43,7 +43,7 @@ const HomePage = () => {
   useEffect(() => {
     const checkNewMessages = async () => {
       try {
-  const res = await fetch("/api/messages/unread-senders", {
+  const res = await fetch("/api/users/unread-senders", {
     headers: {
       Authorization: `Bearer ${authUser?.token}`,
     },
