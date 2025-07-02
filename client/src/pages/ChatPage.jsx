@@ -41,25 +41,20 @@ const ChatPage = () => {
   useEffect(() => {
     if (!messagesEndRef.current) return
 
-    // Scroll function
     const scrollToBottom = () => {
       messagesEndRef.current.scrollIntoView({ behavior: "auto", block: "end" })
     }
 
-    // Call once immediately
     scrollToBottom()
 
-    // Schedule with requestAnimationFrame (next paint)
     const rafId = requestAnimationFrame(() => {
       scrollToBottom()
     })
 
-    // Schedule again after 100ms to catch any late DOM changes
     const timeoutId = setTimeout(() => {
       scrollToBottom()
     }, 100)
 
-    // Cleanup on unmount or messages change
     return () => {
       cancelAnimationFrame(rafId)
       clearTimeout(timeoutId)
@@ -76,11 +71,10 @@ const ChatPage = () => {
   }
 
   const getLastSeenText = () => {
-    // Mock online status - replace with real data
     const isOnline = Math.random() > 0.5
     if (isOnline) return "Online"
 
-    const lastSeen = new Date(Date.now() - Math.random() * 3600000) // Random time within last hour
+    const lastSeen = new Date(Date.now() - Math.random() * 3600000)
     const now = new Date()
     const diffMinutes = Math.floor((now - lastSeen) / (1000 * 60))
 
@@ -147,97 +141,99 @@ const ChatPage = () => {
         </div>
       </div>
 
-  {/* Messages Container */}
-<div className="flex flex-col flex-grow relative z-10 overflow-hidden max-w-3xl mx-auto w-full">
-  {/* Scrollable Messages wrapper with padding and scrollbar */}
-  <div className="flex-1 overflow-y-auto w-full px-4 lg:px-6 py-6 space-y-1 scrollbar-thin scrollbar-thumb-slate-600/50 scrollbar-track-transparent bg-slate-800/20 border-l-2 border-r-2 border-slate-700/40 rounded-lg">
-    {messages.length === 0 ? (
-      <EmptyChat match={match} />
-    ) : (
-      <>
-        {messages.map((msg, index) => {
-          const isOwn = msg.sender === authUser._id
-          const showAvatar = !isOwn && (index === 0 || messages[index - 1]?.sender !== msg.sender)
-          const isLastInGroup = index === messages.length - 1 || messages[index + 1]?.sender !== msg.sender
-          const showTimestamp =
-            isLastInGroup ||
-            (index < messages.length - 1 &&
-              new Date(messages[index + 1]?.createdAt) - new Date(msg.createdAt) > 300000) // 5 minutes
+      {/* Messages Container */}
+      <div className="flex flex-col flex-grow relative z-10 overflow-hidden max-w-3xl mx-auto w-full">
+        {/* Scrollable Messages wrapper with padding and scrollbar */}
+        <div className="flex-1 overflow-y-auto w-full px-4 lg:px-6 py-6 space-y-1 scrollbar-thin scrollbar-thumb-slate-600/50 scrollbar-track-transparent bg-slate-800/20 border-l-2 border-r-2 border-slate-700/40 rounded-lg">
+          {messages.length === 0 ? (
+            <EmptyChat match={match} />
+          ) : (
+            <>
+              {messages.map((msg, index) => {
+                const isOwn = msg.sender === authUser._id
+                const showAvatar = !isOwn && (index === 0 || messages[index - 1]?.sender !== msg.sender)
+                const isLastInGroup = index === messages.length - 1 || messages[index + 1]?.sender !== msg.sender
+                const showTimestamp =
+                  isLastInGroup ||
+                  (index < messages.length - 1 &&
+                    new Date(messages[index + 1]?.createdAt) - new Date(msg.createdAt) > 300000) // 5 minutes
 
-          return (
-            <motion.div
-              key={`${msg._id}-${msg.createdAt}`}
-              initial={{ opacity: 0, y: 8 }}
-              animate={{ opacity: 1, y: 0 }}
-              transition={{ duration: 0.2, ease: "easeOut" }}
-              className={`group flex items-end gap-3 py-1 px-2 rounded-lg hover:bg-slate-800/20 transition-all duration-150 ${
-                isOwn ? "justify-end" : "justify-start"
-              }`}
-            >
-              {!isOwn && (
-                <div className="w-8 flex justify-center">
-                  {showAvatar ? (
-                    <img
-                      src={match.image || "/avatar.png"}
-                      alt={match.name}
-                      className="w-7 h-7 rounded-full ring-1 ring-slate-600/50"
-                    />
-                  ) : null}
-                </div>
-              )}
-
-              <div className={`flex flex-col ${isOwn ? "items-end" : "items-start"} max-w-md lg:max-w-lg`}>
-                <div
-                  className={`
-                    relative px-4 py-2.5 rounded-2xl shadow-sm border backdrop-blur-sm
-                    transition-all duration-150 group-hover:shadow-md
-                    ${
-                      isOwn
-                        ? "bg-gradient-to-r from-amber-500 to-orange-500 text-white border-amber-400/20 rounded-br-md"
-                        : "bg-slate-800/60 text-slate-100 border-slate-700/40 rounded-bl-md"
-                    }
-                    ${isLastInGroup ? "mb-1" : "mb-0.5"}
-                  `}
-                >
-                  <p className="text-sm leading-relaxed break-words">{msg.content}</p>
-                </div>
-
-                {showTimestamp && (
-                  <div
-                    className={`flex items-center gap-2 mt-1 px-2 opacity-0 group-hover:opacity-100 transition-opacity duration-200 ${
-                      isOwn ? "flex-row-reverse" : ""
+                return (
+                  <motion.div
+                    key={`${msg._id}-${msg.createdAt}`}
+                    initial={{ opacity: 0, y: 8 }}
+                    animate={{ opacity: 1, y: 0 }}
+                    transition={{ duration: 0.2, ease: "easeOut" }}
+                    className={`group flex items-end gap-3 py-1 px-2 rounded-lg hover:bg-slate-800/20 transition-all duration-150 ${
+                      isOwn ? "justify-end" : "justify-start"
                     }`}
                   >
-                    <Clock size={11} className="text-slate-500" />
-                    <span className="text-xs text-slate-500">{formatTime(msg.createdAt)}</span>
-                    {isOwn && (
-                      <div className="flex gap-1">
-                        <div className="w-1 h-1 bg-amber-400/60 rounded-full" />
-                        <div className="w-1 h-1 bg-amber-400/60 rounded-full" />
+                    {!isOwn && (
+                      <div className="w-8 flex justify-center">
+                        {showAvatar ? (
+                          <img
+                            src={match.image || "/avatar.png"}
+                            alt={match.name}
+                            className="w-7 h-7 rounded-full ring-1 ring-slate-600/50"
+                          />
+                        ) : null}
                       </div>
                     )}
-                  </div>
-                )}
-              </div>
-            </motion.div>
-          )
-        })}
-        <div ref={messagesEndRef} />
-      </>
-    )}
-  </div>
 
-  {/* Compact Message Input */}
-  <div className="px-4 py-3 max-w-3xl mx-auto relative w-full">
-    {/* Compact background behind input area only */}
-    <div className="absolute inset-0 bg-slate-900/80 backdrop-blur-xl border border-slate-700/50 rounded-xl shadow-lg"></div>
+                    <div className={`flex flex-col ${isOwn ? "items-end" : "items-start"} max-w-md lg:max-w-lg`}>
+                      <div
+                        className={`
+                          relative px-4 py-2.5 rounded-2xl shadow-sm border backdrop-blur-sm
+                          transition-all duration-150 group-hover:shadow-md
+                          ${
+                            isOwn
+                              ? "bg-gradient-to-r from-amber-500 to-orange-500 text-white border-amber-400/20 rounded-br-md"
+                              : "bg-slate-800/60 text-slate-100 border-slate-700/40 rounded-bl-md"
+                          }
+                          ${isLastInGroup ? "mb-1" : "mb-0.5"}
+                        `}
+                      >
+                        <p className="text-sm leading-relaxed break-words">{msg.content}</p>
+                      </div>
 
-    <div className="relative">
-      <MessageInput match={match} />
+                      {showTimestamp && (
+                        <div
+                          className={`flex items-center gap-2 mt-1 px-2 opacity-0 group-hover:opacity-100 transition-opacity duration-200 ${
+                            isOwn ? "flex-row-reverse" : ""
+                          }`}
+                        >
+                          <Clock size={11} className="text-slate-500" />
+                          <span className="text-xs text-slate-500">{formatTime(msg.createdAt)}</span>
+                          {isOwn && (
+                            <div className="flex gap-1">
+                              <div className="w-1 h-1 bg-amber-400/60 rounded-full" />
+                              <div className="w-1 h-1 bg-amber-400/60 rounded-full" />
+                            </div>
+                          )}
+                        </div>
+                      )}
+                    </div>
+                  </motion.div>
+                )
+              })}
+              <div ref={messagesEndRef} />
+            </>
+          )}
+        </div>
+
+        {/* Compact Message Input */}
+        <div className="px-4 py-3 max-w-3xl mx-auto relative w-full">
+          {/* Compact background behind input area only */}
+          <div className="absolute inset-0 bg-slate-900/80 backdrop-blur-xl border border-slate-700/50 rounded-xl shadow-lg"></div>
+
+          <div className="relative">
+            <MessageInput match={match} />
+          </div>
+        </div>
+      </div>
     </div>
-  </div>
-</div>
-
+  )
+}
 
 export default ChatPage
 
@@ -312,4 +308,4 @@ const LoadingMessagesUI = () => (
     </div>
     <p className="text-slate-300 mt-4 text-sm">Loading conversation...</p>
   </div>
-) 
+)
