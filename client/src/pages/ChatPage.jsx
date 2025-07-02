@@ -151,7 +151,6 @@ const ChatPage = () => {
       <div className="flex flex-col flex-grow relative z-10 overflow-hidden">
         {/* Scrollable Messages with borders and background */}
         <div className="flex-1 overflow-y-auto px-4 lg:px-6 py-6 space-y-1 scrollbar-thin scrollbar-thumb-slate-600/50 scrollbar-track-transparent bg-slate-800/20 border-l-2 border-r-2 border-slate-700/40">
-          <div className="max-w-3xl mx-auto">
             {messages.length === 0 ? (
               <EmptyChat match={match} />
             ) : (
