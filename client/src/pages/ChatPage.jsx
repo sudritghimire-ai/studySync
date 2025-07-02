@@ -124,7 +124,7 @@ const ChatPage = () => {
       {/* Floating header card */}
       <div className="px-4 py-4 sticky top-0 z-20">
         <div className="max-w-3xl mx-auto flex justify-center">
-          <div className="w-full max-w-3xl flex items-center justify-between bg-slate-900/80 backdrop-blur-xl border border-slate-700/50 rounded-xl shadow-lg px-4 py-3 gap-4">
+          <div className="w-full max-w-3xl flex items-center justify-between bg-slate-900/80 backdrop-blur-xl border border-slate-700/50 rounded-t-xl shadow-lg px-4 py-3 gap-4">
             <div className="flex items-center gap-3 min-w-0">
               <Link 
                 to="/" 
@@ -142,7 +142,12 @@ const ChatPage = () => {
                 <div className="absolute -bottom-0.5 -right-0.5 w-3 h-3 bg-green-400 border-2 border-slate-900 rounded-full" />
               </div>
               
-              
+              <div className="flex flex-col min-w-0">
+                <div className="flex items-center gap-1">
+                  <Circle size={6} className="text-green-400 fill-current" />
+                  <span className="text-xs text-slate-400">{getLastSeenText()}</span>
+                </div>
+              </div>
             </div>
             
             <div className="flex flex-col items-end">
@@ -156,9 +161,7 @@ const ChatPage = () => {
       </div>
 
       {/* Message container */}
-<div
-  className="flex flex-col flex-grow relative z-10 max-w-3xl mx-auto w-full overflow-hidden mt-0"
->
+      <div className="flex flex-col flex-grow relative z-10 max-w-3xl mx-auto w-full overflow-hidden">
         <div
           ref={scrollContainerRef}
           className="relative flex-1 overflow-y-auto px-4 lg:px-6 py-6 space-y-1 scrollbar-thin scrollbar-thumb-slate-600/50 scrollbar-track-transparent bg-slate-800/20 border-x-2 border-slate-700/40"
@@ -244,7 +247,7 @@ const ChatPage = () => {
               animate={{ opacity: 1, scale: 1 }}
               exit={{ opacity: 0, scale: 0.8 }}
               transition={{ duration: 0.3, ease: "easeOut" }}
-              className="absolute bottom-4 left-4 z-30"
+              className="absolute bottom-2 left-4 z-30"
             >
               <button
                 onClick={scrollToBottom}
@@ -258,7 +261,7 @@ const ChatPage = () => {
 
         {/* Message input */}
         <div className="relative px-4 py-3 max-w-3xl mx-auto w-full">
-<div className="absolute inset-0 bg-slate-900/80 backdrop-blur-xl shadow-lg"></div>
+          <div className="absolute inset-0 bg-slate-900/80 backdrop-blur-xl shadow-lg"></div>
           <div className="relative">
             <MessageInput match={match} />
           </div>
