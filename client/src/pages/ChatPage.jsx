@@ -21,7 +21,6 @@ const ChatPage = () => {
   const [hasInitiallyScrolled, setHasInitiallyScrolled] = useState(false)
 
   const match = matches.find((m) => m?._id === chatUserId)
-const scrollContainerRef = useRef(null);
 
   useEffect(() => {
     if (chatUserId) {
@@ -38,14 +37,34 @@ const scrollContainerRef = useRef(null);
 
     return () => unsubscribeFromMessages()
   }, [getMyMatches, authUser, getMessages, subscribeToMessages, unsubscribeFromMessages, chatUserId])
-useEffect(() => {
-  if (scrollContainerRef.current) {
-    scrollContainerRef.current.scrollTop = scrollContainerRef.current.scrollHeight;
-  }
-}, [messages.length]);
 
+  useEffect(() => {
+    if (!messagesEndRef.current) return
 
+    // Scroll function
+    const scrollToBottom = () => {
+      messagesEndRef.current.scrollIntoView({ behavior: "auto", block: "end" })
+    }
 
+    // Call once immediately
+    scrollToBottom()
+
+    // Schedule with requestAnimationFrame (next paint)
+    const rafId = requestAnimationFrame(() => {
+      scrollToBottom()
+    })
+
+    // Schedule again after 100ms to catch any late DOM changes
+    const timeoutId = setTimeout(() => {
+      scrollToBottom()
+    }, 100)
+
+    // Cleanup on unmount or messages change
+    return () => {
+      cancelAnimationFrame(rafId)
+      clearTimeout(timeoutId)
+    }
+  }, [messages.length])
 
   if (isLoadingMyMatches) return <LoadingMessagesUI />
 
@@ -90,7 +109,7 @@ useEffect(() => {
       {/* Floating Chat Header Card */}
       <div className="px-4 py-4 sticky top-0 z-20">
         <div className="max-w-3xl mx-auto flex justify-center">
-<div className="w-full max-w-3xl flex items-center justify-between bg-slate-900/80 backdrop-blur-xl border border-slate-700/50 rounded-xl shadow-lg px-4 py-3 gap-4 mx-auto">
+          <div className="w-full max-w-3xl flex items-center justify-between bg-slate-900/80 backdrop-blur-xl border border-slate-700/50 rounded-xl shadow-lg px-4 py-3 gap-4 mx-auto">
             {/* Left side - Back button, Avatar, Name & Status */}
             <div className="flex items-center gap-3 min-w-0">
               <Link
@@ -130,11 +149,8 @@ useEffect(() => {
 
       {/* Messages Container */}
       <div className="flex flex-col flex-grow relative z-10 overflow-hidden">
-        {/* Scrollable Messages */}
-<div
-  ref={scrollContainerRef}
-  className="flex-1 overflow-y-auto px-4 lg:px-6 py-6 space-y-1 scrollbar-thin scrollbar-thumb-slate-600/50 scrollbar-track-transparent"
->
+        {/* Scrollable Messages with borders and background */}
+        <div className="flex-1 overflow-y-auto px-4 lg:px-6 py-6 space-y-1 scrollbar-thin scrollbar-thumb-slate-600/50 scrollbar-track-transparent bg-slate-800/20 border-l-2 border-r-2 border-slate-700/40">
           <div className="max-w-3xl mx-auto">
             {messages.length === 0 ? (
               <EmptyChat match={match} />
@@ -217,7 +233,7 @@ useEffect(() => {
         <div className="px-4 py-3">
           <div className="max-w-3xl mx-auto relative">
             {/* Compact background behind input area only */}
-<div className="absolute inset-0 bg-slate-900/80 backdrop-blur-xl border border-slate-700/50 rounded-xl shadow-lg"></div>
+            <div className="absolute inset-0 bg-slate-900/80 backdrop-blur-xl border border-slate-700/50 rounded-xl shadow-lg"></div>
 
             <div className="relative">
               <MessageInput match={match} />
@@ -302,4 +318,4 @@ const LoadingMessagesUI = () => (
     </div>
     <p className="text-slate-300 mt-4 text-sm">Loading conversation...</p>
   </div>
-) done ?
+) 
