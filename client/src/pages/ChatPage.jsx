@@ -22,18 +22,39 @@ const ChatPage = () => {
   } = useMessageStore();
   const { authUser } = useAuthStore();
 
-  const [showOptions, setShowOptions] = useState(false);
+  const [showScrollButton, setShowScrollButton] = useState(false);
 
   const match = matches.find((m) => m?._id === chatUserId);
 
   const scrollContainerRef = useRef(null);
 
-  // bulletproof scroll
+  // bulletproof scroll on new messages
   useEffect(() => {
     if (scrollContainerRef.current) {
       scrollContainerRef.current.scrollTop = scrollContainerRef.current.scrollHeight;
     }
   }, [messages.length]);
+
+  // show/hide scroll to bottom button
+  useEffect(() => {
+    const container = scrollContainerRef.current;
+    if (!container) return;
+
+    const handleScroll = () => {
+      const isAtBottom =
+        container.scrollHeight - container.scrollTop - container.clientHeight < 100;
+      setShowScrollButton(!isAtBottom);
+    };
+
+    container.addEventListener("scroll", handleScroll);
+    return () => container.removeEventListener("scroll", handleScroll);
+  }, []);
+
+  const scrollToBottom = () => {
+    if (scrollContainerRef.current) {
+      scrollContainerRef.current.scrollTop = scrollContainerRef.current.scrollHeight;
+    }
+  };
 
   useEffect(() => {
     if (chatUserId) {
@@ -238,6 +259,16 @@ const ChatPage = () => {
             </>
           )}
         </div>
+
+        {/* scroll to bottom button */}
+        {showScrollButton && (
+          <button
+            onClick={scrollToBottom}
+            className="fixed bottom-20 right-4 z-50 px-3 py-2 rounded-full bg-amber-500 hover:bg-amber-600 text-white shadow-lg"
+          >
+            ↓ Scroll to bottom
+          </button>
+        )}
 
         {/* compact message input */}
         <div className="px-4 py-3 max-w-3xl mx-auto relative w-full">
