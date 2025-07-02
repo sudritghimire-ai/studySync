@@ -216,22 +216,19 @@ const ChatPage = () => {
               );
             })
           )}
-          {showScrollButton && (
-            <motion.div
-              initial={{ opacity: 0, scale: 0.8 }}
-              animate={{ opacity: 1, scale: 1 }}
-              exit={{ opacity: 0, scale: 0.8 }}
-              transition={{ duration: 0.3, ease: "easeOut" }}
-              className="absolute bottom-2 left-4 z-30"
-            >
-              <button
-                onClick={scrollToBottom}
-                className="px-3 py-2 rounded-full bg-cyan-500 hover:bg-cyan-600 text-white shadow-lg transition-colors"
-              >
-                ↓ Scroll to bottom
-              </button>
-            </motion.div>
-          )}
+         {showScrollButton && (
+  <motion.button
+    initial={{ opacity: 0, scale: 0.8 }}
+    animate={{ opacity: 1, scale: 1 }}
+    exit={{ opacity: 0, scale: 0.8 }}
+    transition={{ duration: 0.3, ease: "easeOut" }}
+    onClick={scrollToBottom}
+    className="absolute left-1/2 transform -translate-x-1/2 top-1/2 -translate-y-1/2 px-3 py-1.5 rounded-full bg-cyan-500 hover:bg-cyan-600 text-white text-xs shadow-lg z-50"
+  >
+    ↓ Scroll
+  </motion.button>
+)}
+
         </div>
 
         {/* Message input */}
@@ -292,12 +289,13 @@ const MatchNotFound = () => (
       <p className="text-slate-400 mb-6 text-sm">
         This conversation doesn't exist or may have been removed.
       </p>
-      <Link
-        to="/"
-        className="inline-flex items-center gap-2 px-6 py-2.5 bg-gradient-to-r from-amber-500 to-orange-500 text-white rounded-lg hover:from-amber-600 hover:to-orange-600 transition"
-      >
-        <ArrowLeft size={16} /> Back to Chats
-      </Link>
+      <button
+  onClick={() => useSidebarStore.getState().openDrawer()}
+  className="p-1.5 hover:bg-slate-700/50 rounded-lg group transition-all duration-200 flex-shrink-0"
+>
+  <ArrowLeft size={18} className="text-slate-400 group-hover:text-white" />
+</button>
+
     </div>
   </div>
 );
