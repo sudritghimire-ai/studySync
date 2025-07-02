@@ -119,7 +119,6 @@ const ChatPage = () => {
         ></div>
       </div>
 
-      <Header />
 
       {/* Floating header card */}
 <div className="px-4 py-0 sticky top-0 z-20">
