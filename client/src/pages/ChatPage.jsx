@@ -1,6 +1,6 @@
 "use client";
 
-import { useEffect, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import { Header } from "../components/Header";
 import { useAuthStore } from "../store/useAuthStore";
 import { useMatchStore } from "../store/useMatchStore";
@@ -10,7 +10,6 @@ import { UserX, ArrowLeft, Clock, MessageCircle, Circle } from "lucide-react";
 import MessageInput from "../components/MessageInput";
 import { axiosInstance } from "../lib/axios";
 import { motion } from "framer-motion";
-import { useAutoScroll } from "../lib/useAutoScroll"; // ✅ use the hook
 
 const ChatPage = () => {
   const { id: chatUserId } = useParams();
@@ -27,8 +26,8 @@ const ChatPage = () => {
 
   const match = matches.find((m) => m?._id === chatUserId);
 
-  // attach scroll hook
-  const scrollContainerRef = useAutoScroll(messages);
+  // anchor ref
+  const messagesEndRef = useRef(null);
 
   useEffect(() => {
     if (chatUserId) {
@@ -54,6 +53,16 @@ const ChatPage = () => {
     chatUserId,
   ]);
 
+  // bulletproof scroll effect
+  useEffect(() => {
+    if (messagesEndRef.current) {
+      messagesEndRef.current.scrollIntoView({
+        behavior: "smooth",
+        block: "end",
+      });
+    }
+  }, [messages]);
+
   if (isLoadingMyMatches) return <LoadingMessagesUI />;
   if (!match) return <MatchNotFound />;
 
@@ -77,7 +86,7 @@ const ChatPage = () => {
 
   return (
     <div className="flex flex-col h-screen bg-gradient-to-br from-slate-900 via-purple-950/40 to-indigo-950/60 relative">
-      {/* Subtle animated background */}
+      {/* animated bg */}
       <div className="absolute inset-0 overflow-hidden pointer-events-none">
         <div className="absolute top-1/4 left-1/4 w-96 h-96 bg-purple-500/3 rounded-full blur-3xl animate-pulse"></div>
         <div
@@ -92,7 +101,7 @@ const ChatPage = () => {
 
       <Header />
 
-      {/* Floating Chat Header Card */}
+      {/* Floating header */}
       <div className="px-4 py-4 sticky top-0 z-20">
         <div className="max-w-3xl mx-auto flex justify-center">
           <div className="w-full max-w-3xl flex items-center justify-between bg-slate-900/80 backdrop-blur-xl border border-slate-700/50 rounded-xl shadow-lg px-4 py-3 gap-4 mx-auto">
@@ -140,10 +149,9 @@ const ChatPage = () => {
         </div>
       </div>
 
-      {/* Messages Container */}
+      {/* Messages */}
       <div className="flex flex-col flex-grow relative z-10 overflow-hidden max-w-3xl mx-auto w-full">
         <div
-          ref={scrollContainerRef}
           className="flex-1 overflow-y-auto w-full px-4 lg:px-6 py-6 space-y-1 scrollbar-thin scrollbar-thumb-slate-600/50 scrollbar-track-transparent bg-slate-800/20 border-l-2 border-r-2 border-slate-700/40 rounded-lg"
         >
           {messages.length === 0 ? (
@@ -230,11 +238,13 @@ const ChatPage = () => {
                   </motion.div>
                 );
               })}
+              {/* anchor marker */}
+              <div ref={messagesEndRef} />
             </>
           )}
         </div>
 
-        {/* Compact Message Input */}
+        {/* Compact input */}
         <div className="px-4 py-3 max-w-3xl mx-auto relative w-full">
           <div className="absolute inset-0 bg-slate-900/80 backdrop-blur-xl border border-slate-700/50 rounded-xl shadow-lg"></div>
           <div className="relative">
@@ -288,7 +298,9 @@ const MatchNotFound = () => (
     </div>
     <div className="relative z-10 p-8 rounded-2xl bg-slate-800/80 backdrop-blur-xl text-center border border-slate-700/50 shadow-xl max-w-md mx-4">
       <UserX size={48} className="text-slate-400 mx-auto mb-4" />
-      <h2 className="text-2xl font-semibold text-slate-100 mb-3">Conversation Not Found</h2>
+      <h2 className="text-2xl font-semibold text-slate-100 mb-3">
+        Conversation Not Found
+      </h2>
       <p className="text-slate-400 mb-6 text-sm leading-relaxed">
         This conversation doesn't exist or may have been removed.
       </p>
