@@ -52,16 +52,19 @@ const ChatPage = () => {
     unsubscribeFromMessages,
     chatUserId,
   ]);
-
-  // bulletproof scroll effect
 useEffect(() => {
-  if (messagesEndRef.current) {
-    messagesEndRef.current.scrollIntoView({
-      behavior: "smooth",
-      block: "end",
-    });
-  }
-}, [messages.length]);   // <-- this is the key
+  const timeout = setTimeout(() => {
+    if (messagesEndRef.current) {
+      messagesEndRef.current.scrollIntoView({
+        behavior: "smooth",
+        block: "end",
+      });
+    }
+  }, 50); // small delay lets the DOM fully paint, including framer-motion
+
+  return () => clearTimeout(timeout);
+}, [messages.length]);
+
 
 
   if (isLoadingMyMatches) return <LoadingMessagesUI />;
