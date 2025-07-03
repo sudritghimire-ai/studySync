@@ -9,7 +9,7 @@ import { useMatchStore } from "../store/useMatchStore"
 const SwipeArea = () => {
   const { userProfiles, swipeRight, swipeLeft, getUserProfiles } = useMatchStore()
   const [visibleCards, setVisibleCards] = useState([])
-  const [nextIndex, setNextIndex] = useState(3)
+  const [nextIndex, setNextIndex] = useState(1)
 const [isReloading, setIsReloading] = useState(false);
 
   // Initialize visible cards
