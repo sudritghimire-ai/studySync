@@ -300,8 +300,7 @@ className="px-10 pb-10 space-y-4"
 
           {/* Bio Section */}
   <motion.div
-  className="w-[95%] max-w-[320px] bg-slate-800/60 backdrop-blur-sm rounded-2xl p-5 border border-slate-700/40 shadow-inner pointer-events-none"
-
+  className="w-full max-w-[380px] mx-auto bg-slate-800/60 backdrop-blur-sm rounded-2xl p-5 border border-slate-700/40 shadow-inner pointer-events-none"
   whileHover={{
     backgroundColor: "rgba(30, 41, 59, 0.7)",
     transition: { duration: 0.3 },
