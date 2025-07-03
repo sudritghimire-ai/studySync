@@ -299,24 +299,22 @@ className="px-10 pb-10 space-y-4"
           </div>
 
           {/* Bio Section */}
-         <motion.div
-  className="bg-slate-800/60 backdrop-blur-sm rounded-2xl p-5 border border-slate-700/40 shadow-inner w-full"
-  style={{ maxWidth: "90%" }}
+       <motion.div
+  className="w-[90%] bg-slate-800/60 backdrop-blur-sm rounded-2xl p-5 border border-slate-700/40 shadow-inner pointer-events-none"
   whileHover={{
     backgroundColor: "rgba(30, 41, 59, 0.7)",
     transition: { duration: 0.3 },
   }}
 >
+  <div className="flex items-center gap-2 mb-3 pointer-events-auto">
+    <BookOpen className="w-4 h-4 text-indigo-400" />
+    <span className="text-sm font-semibold text-slate-200">About</span>
+  </div>
+  <p className="text-slate-300 text-sm leading-relaxed whitespace-pre-wrap break-words pointer-events-auto">
+    {user.bio || "Excited to connect and collaborate on studies!"}
+  </p>
+</motion.div>
 
-            <div className="flex items-center gap-2 mb-3">
-              <BookOpen className="w-4 h-4 text-indigo-400" />
-              <span className="text-sm font-semibold text-slate-200">About</span>
-            </div>
-      <p className="text-slate-300 text-sm leading-relaxed whitespace-pre-wrap break-words">
-  {user.bio || "Excited to connect and collaborate on studies!"}
-</p>
-
-          </motion.div>
 
           {/* Academic Interests */}
           {user.interests?.length > 0 && (
