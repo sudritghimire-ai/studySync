@@ -14,8 +14,8 @@ const [isReloading, setIsReloading] = useState(false);
 
   // Initialize visible cards
   useEffect(() => {
-    setVisibleCards(userProfiles.slice(0, 3))
-    setNextIndex(3)
+    setVisibleCards(userProfiles.slice(0, 1))
+    setNextIndex(1)
   }, [userProfiles])
 
   // Auto-reload when stack is empty
