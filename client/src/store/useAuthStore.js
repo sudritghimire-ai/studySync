@@ -2,7 +2,7 @@ import { create } from "zustand";
 import { persist } from "zustand/middleware";
 import { axiosInstance } from "../lib/axios";
 import toast from "react-hot-toast";
-import { disconnectSocket, initializeSocket } from "../socket/socket.client";
+import { disconnectSocket, initializeSocket, socket } from "../socket/socket.client";
 
 export const useAuthStore = create(
   persist(
@@ -33,6 +33,10 @@ export const useAuthStore = create(
           });
           set({ authUser: res.data.user });
           initializeSocket(res.data.user._id);
+
+          // ✅ force request the cards after login:
+          socket.emit("requestCards", res.data.user._id);
+
           toast.success("Logged in successfully");
         } catch (error) {
           toast.error(error.response?.data?.message || "Something went wrong");
@@ -57,6 +61,10 @@ export const useAuthStore = create(
           const res = await axiosInstance.get("/auth/me", { withCredentials: true });
           set({ authUser: res.data.user });
           initializeSocket(res.data.user._id);
+
+          // ✅ also request cards on auth check (e.g. page reload)
+          socket.emit("requestCards", res.data.user._id);
+
         } catch (error) {
           set({ authUser: null });
         } finally {
