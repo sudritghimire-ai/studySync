@@ -58,7 +58,7 @@ const [isReloading, setIsReloading] = useState(false);
   }
 
   return (
-<div className="relative w-full max-w-sm mx-auto mt-[-220px] px-4">
+<div className="relative w-full max-w-md mx-auto mt-[-220px] px-4">
       {/* Enhanced Background Effects */}
       <div className="absolute inset-0 -inset-x-8 -inset-y-8">
         <motion.div
@@ -300,7 +300,7 @@ className="px-10 pb-10 space-y-4"
 
           {/* Bio Section */}
   <motion.div
-  className="w-full max-w-[380px] mx-auto bg-slate-800/60 backdrop-blur-sm rounded-2xl p-5 border border-slate-700/40 shadow-inner pointer-events-none"
+  className="w-full max-w-[420px] mx-auto bg-slate-800/60 backdrop-blur-sm rounded-2xl p-5 border border-slate-700/40 shadow-inner pointer-events-none"
   whileHover={{
     backgroundColor: "rgba(30, 41, 59, 0.7)",
     transition: { duration: 0.3 },
