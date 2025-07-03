@@ -299,13 +299,15 @@ className="px-10 pb-10 space-y-4"
           </div>
 
           {/* Bio Section */}
-          <motion.div
-            className="bg-slate-800/60 backdrop-blur-sm rounded-2xl p-5 border border-slate-700/40 shadow-inner"
-            whileHover={{
-              backgroundColor: "rgba(30, 41, 59, 0.7)",
-              transition: { duration: 0.3 },
-            }}
-          >
+         <motion.div
+  className="bg-slate-800/60 backdrop-blur-sm rounded-2xl p-5 border border-slate-700/40 shadow-inner w-full"
+  style={{ maxWidth: "90%" }}
+  whileHover={{
+    backgroundColor: "rgba(30, 41, 59, 0.7)",
+    transition: { duration: 0.3 },
+  }}
+>
+
             <div className="flex items-center gap-2 mb-3">
               <BookOpen className="w-4 h-4 text-indigo-400" />
               <span className="text-sm font-semibold text-slate-200">About</span>
