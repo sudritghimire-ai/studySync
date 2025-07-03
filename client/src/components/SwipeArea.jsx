@@ -7,9 +7,10 @@ import { MessageCircle, GraduationCap, BookOpen, Users, MapPin } from "lucide-re
 import { useMatchStore } from "../store/useMatchStore"
 
 const SwipeArea = () => {
-  const { userProfiles, swipeRight, swipeLeft } = useMatchStore()
+  const { userProfiles, swipeRight, swipeLeft, getUserProfiles } = useMatchStore()
   const [visibleCards, setVisibleCards] = useState([])
   const [nextIndex, setNextIndex] = useState(3)
+  const [isReloading, setIsReloading] = useState(false)
 
   // Initialize visible cards
   useEffect(() => {
@@ -17,12 +18,28 @@ const SwipeArea = () => {
     setNextIndex(3)
   }, [userProfiles])
 
+  // Auto-reload when stack is empty
+  useEffect(() => {
+    const shouldReload = visibleCards.length === 0 && nextIndex >= userProfiles.length && userProfiles.length > 0
+
+    if (shouldReload && !isReloading) {
+      setIsReloading(true)
+
+      // Small delay for smooth transition
+      setTimeout(async () => {
+        await getUserProfiles()
+        setIsReloading(false)
+      }, 500)
+    }
+  }, [visibleCards.length, nextIndex, userProfiles.length, getUserProfiles, isReloading])
+
   const handleSwipe = (dir, user) => {
     if (dir === "right") swipeRight(user)
     else swipeLeft(user)
 
     setVisibleCards((prev) => prev.slice(1)) // Remove swiped card
 
+    // Add next card if available
     if (nextIndex < userProfiles.length) {
       setVisibleCards((prev) => [...prev, userProfiles[nextIndex]])
       setNextIndex((prev) => prev + 1)
@@ -116,8 +133,20 @@ const SwipeArea = () => {
           ))}
         </AnimatePresence>
 
-        {/* Empty State */}
-        {userProfiles.length === 0 && (
+        {/* Loading State - shows when reloading new profiles */}
+        {isReloading && (
+          <motion.div
+            initial={{ opacity: 0, scale: 0.9 }}
+            animate={{ opacity: 1, scale: 1 }}
+            exit={{ opacity: 0, scale: 0.9 }}
+            transition={{ duration: 0.3 }}
+          >
+            <LoadingState />
+          </motion.div>
+        )}
+
+        {/* Empty State - only shows when no profiles available initially */}
+        {userProfiles.length === 0 && !isReloading && (
           <motion.div
             initial={{ opacity: 0, scale: 0.9 }}
             animate={{ opacity: 1, scale: 1 }}
@@ -130,6 +159,41 @@ const SwipeArea = () => {
     </div>
   )
 }
+
+// Loading state component for when fetching new profiles
+const LoadingState = () => (
+  <div className="relative h-[540px] rounded-3xl overflow-hidden bg-gradient-to-br from-slate-900/95 to-slate-800/95 backdrop-blur-xl border border-slate-700/50 shadow-2xl">
+    <div className="flex flex-col items-center justify-center h-full text-center p-8 space-y-6">
+      {/* Animated Loading Icon */}
+      <motion.div
+        animate={{ rotate: 360 }}
+        transition={{
+          duration: 2,
+          repeat: Number.POSITIVE_INFINITY,
+          ease: "linear",
+        }}
+      >
+        <GraduationCap className="w-16 h-16 text-indigo-400" />
+      </motion.div>
+
+      {/* Loading Text */}
+      <div className="space-y-3">
+        <h3 className="text-xl font-bold text-slate-200 tracking-wide">Finding New Connections</h3>
+        <motion.p
+          className="text-slate-400 text-sm leading-relaxed max-w-xs"
+          animate={{ opacity: [0.5, 1, 0.5] }}
+          transition={{
+            duration: 2,
+            repeat: Number.POSITIVE_INFINITY,
+            ease: "easeInOut",
+          }}
+        >
+          Discovering more academic partners for you...
+        </motion.p>
+      </div>
+    </div>
+  </div>
+)
 
 // Extracted ProfileCard component for better maintainability
 const ProfileCard = ({ user, onQuickConnect, onKeyDown, isTopCard }) => {
