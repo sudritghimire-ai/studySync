@@ -197,8 +197,8 @@ const LoadingState = () => (
 // Extracted ProfileCard component for better maintainability
 const ProfileCard = ({ user, onQuickConnect, onKeyDown, isTopCard }) => {
   return (
-    <motion.div
-      className="w-full select-none relative h-[540px] group"
+  <motion.div
+  className="w-full select-none relative h-[600px] group"
       whileHover={
         isTopCard
           ? {
@@ -210,7 +210,8 @@ const ProfileCard = ({ user, onQuickConnect, onKeyDown, isTopCard }) => {
       }
     >
       {/* Main Card Container */}
-      <div className="relative h-full rounded-3xl overflow-hidden shadow-2xl bg-gradient-to-br from-slate-900/95 to-slate-800/95 backdrop-blur-xl border border-slate-700/50">
+      <div className="relative h-full rounded-[32px] overflow-hidden shadow-2xl bg-gradient-to-br from-slate-900/95 to-slate-800/95 backdrop-blur-xl border-[2px] border-slate-600/50"
+>
         {/* Subtle Inner Glow */}
         <div className="absolute inset-0 bg-gradient-to-br from-slate-800/20 via-transparent to-slate-900/20 pointer-events-none" />
 
@@ -279,7 +280,7 @@ const ProfileCard = ({ user, onQuickConnect, onKeyDown, isTopCard }) => {
 
         {/* User Information */}
         <motion.div
-          className="px-8 pb-8 space-y-4"
+className="px-10 pb-10 space-y-4"
           initial={{ y: 20, opacity: 0 }}
           animate={{ y: 0, opacity: 1 }}
           transition={{ delay: 0.4, duration: 0.5 }}
