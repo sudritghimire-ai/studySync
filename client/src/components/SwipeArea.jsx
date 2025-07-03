@@ -10,6 +10,7 @@ const SwipeArea = () => {
   const { userProfiles, swipeRight, swipeLeft, getUserProfiles } = useMatchStore()
   const [visibleCards, setVisibleCards] = useState([])
   const [nextIndex, setNextIndex] = useState(3)
+const [isReloading, setIsReloading] = useState(false);
 
   // Initialize visible cards
   useEffect(() => {
