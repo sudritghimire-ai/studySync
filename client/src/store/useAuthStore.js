@@ -34,7 +34,7 @@ export const useAuthStore = create(
           set({ authUser: res.data.user });
           initializeSocket(res.data.user._id);
 
-          // ✅ force request the cards after login:
+          // ✅ force request cards after login
           socket.emit("requestCards", res.data.user._id);
 
           toast.success("Logged in successfully");
@@ -62,7 +62,7 @@ export const useAuthStore = create(
           set({ authUser: res.data.user });
           initializeSocket(res.data.user._id);
 
-          // ✅ also request cards on auth check (e.g. page reload)
+          // ✅ also request cards after reload
           socket.emit("requestCards", res.data.user._id);
 
         } catch (error) {
