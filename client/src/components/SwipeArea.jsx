@@ -309,10 +309,13 @@ const ProfileCard = ({ user, onQuickConnect, onKeyDown, isTopCard }) => {
               <BookOpen className="w-4 h-4 text-indigo-400" />
               <span className="text-sm font-semibold text-slate-200">About</span>
             </div>
-            <p className="text-slate-300 text-sm leading-relaxed line-clamp-4">
-              {user.bio ||
-                "Looking for study partners and academic connections. Let's learn together and achieve our goals!"}
-            </p>
+       <p
+  className="text-slate-300 text-sm leading-relaxed line-clamp-4"
+  style={{ whiteSpace: "pre-line" }}
+>
+  {user.bio || "Excited to connect and collaborate on studies!"}
+</p>
+
           </motion.div>
 
           {/* Academic Interests */}
