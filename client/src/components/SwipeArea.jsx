@@ -10,7 +10,6 @@ const SwipeArea = () => {
   const { userProfiles, swipeRight, swipeLeft, getUserProfiles } = useMatchStore()
   const [visibleCards, setVisibleCards] = useState([])
   const [nextIndex, setNextIndex] = useState(3)
-  const [isReloading, setIsReloading] = useState(false)
 
   // Initialize visible cards
   useEffect(() => {
@@ -19,19 +18,16 @@ const SwipeArea = () => {
   }, [userProfiles])
 
   // Auto-reload when stack is empty
-  useEffect(() => {
-    const shouldReload = visibleCards.length === 0 && nextIndex >= userProfiles.length && userProfiles.length > 0
+ useEffect(() => {
+  const shouldReload =
+    visibleCards.length === 0 &&
+    nextIndex >= userProfiles.length &&
+    userProfiles.length > 0;
 
-    if (shouldReload && !isReloading) {
-      setIsReloading(true)
-
-      // Small delay for smooth transition
-      setTimeout(async () => {
-        await getUserProfiles()
-        setIsReloading(false)
-      }, 500)
-    }
-  }, [visibleCards.length, nextIndex, userProfiles.length, getUserProfiles, isReloading])
+  if (shouldReload) {
+    getUserProfiles();
+  }
+}, [visibleCards.length, nextIndex, userProfiles.length, getUserProfiles]);
 
   const handleSwipe = (dir, user) => {
     if (dir === "right") swipeRight(user)
