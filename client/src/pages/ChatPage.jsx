@@ -184,49 +184,17 @@ const ChatPage = () => {
               </div>
             </div>
 
-            {/* Right Section */}
-            <div className="flex items-center gap-2">
-              <motion.button
-                className="p-2 hover:bg-slate-700/50 rounded-xl transition-all duration-200"
-                whileHover={{ scale: 1.05 }}
-                whileTap={{ scale: 0.95 }}
-              >
-                <Phone size={18} className="text-slate-400 hover:text-green-400 transition-colors" />
-              </motion.button>
-              
-              <motion.button
-                className="p-2 hover:bg-slate-700/50 rounded-xl transition-all duration-200"
-                whileHover={{ scale: 1.05 }}
-                whileTap={{ scale: 0.95 }}
-              >
-                <Video size={18} className="text-slate-400 hover:text-blue-400 transition-colors" />
-              </motion.button>
+         <div className="flex items-center gap-2">
+  <motion.button
+    onClick={scrollToBottom}
+    className="px-3 py-1.5 rounded-xl bg-gradient-to-r from-cyan-500 to-blue-500 hover:from-cyan-600 hover:to-blue-600 text-xs text-white shadow-lg font-medium"
+    whileHover={{ scale: 1.05 }}
+    whileTap={{ scale: 0.95 }}
+  >
+    ↓ Scroll to Latest
+  </motion.button>
+</div>
 
-              <motion.button
-                onClick={() => setShowOptions(!showOptions)}
-                className="p-2 hover:bg-slate-700/50 rounded-xl transition-all duration-200 relative"
-                whileHover={{ scale: 1.05 }}
-                whileTap={{ scale: 0.95 }}
-              >
-                <MoreVertical size={18} className="text-slate-400 hover:text-white transition-colors" />
-              </motion.button>
-
-              <AnimatePresence>
-                {showScrollButton && (
-                  <motion.button
-                    onClick={scrollToBottom}
-                    className="px-3 py-1.5 rounded-xl bg-gradient-to-r from-cyan-500 to-blue-500 hover:from-cyan-600 hover:to-blue-600 text-xs text-white shadow-lg font-medium"
-                    initial={{ opacity: 0, scale: 0.8 }}
-                    animate={{ opacity: 1, scale: 1 }}
-                    exit={{ opacity: 0, scale: 0.8 }}
-                    whileHover={{ scale: 1.05 }}
-                    whileTap={{ scale: 0.95 }}
-                  >
-                    ↓ New Messages
-                  </motion.button>
-                )}
-              </AnimatePresence>
-            </div>
           </div>
         </div>
       </motion.div>
