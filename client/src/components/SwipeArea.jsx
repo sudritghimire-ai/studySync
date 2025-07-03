@@ -58,7 +58,7 @@ const [isReloading, setIsReloading] = useState(false);
   }
 
   return (
-    <div className="relative w-full max-w-sm mx-auto mt-[-220px] px-4">
+<div className="relative w-full max-w-sm mx-auto mt-[-220px] px-4">
       {/* Enhanced Background Effects */}
       <div className="absolute inset-0 -inset-x-8 -inset-y-8">
         <motion.div
@@ -198,7 +198,7 @@ const LoadingState = () => (
 const ProfileCard = ({ user, onQuickConnect, onKeyDown, isTopCard }) => {
   return (
   <motion.div
-  className="w-full select-none relative h-[600px] group"
+  className="w-full select-none relative h-[520px] group"
       whileHover={
         isTopCard
           ? {
