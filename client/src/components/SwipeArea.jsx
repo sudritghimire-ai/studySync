@@ -25,10 +25,12 @@ const [isReloading, setIsReloading] = useState(false);
     nextIndex >= userProfiles.length &&
     userProfiles.length > 0;
 
-  if (shouldReload) {
-    getUserProfiles();
+  if (shouldReload && !isReloading) {
+    setIsReloading(true);
+    getUserProfiles().finally(() => setIsReloading(false));
   }
-}, [visibleCards.length, nextIndex, userProfiles.length, getUserProfiles]);
+}, [visibleCards.length, nextIndex, userProfiles.length, getUserProfiles, isReloading]);
+
 
   const handleSwipe = (dir, user) => {
     if (dir === "right") swipeRight(user)
