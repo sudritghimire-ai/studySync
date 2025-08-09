@@ -11,28 +11,6 @@ import { useMessageStore } from "../store/useMessageStore"
 import { useSidebarStore } from "../store/useSidebarStore"
 import { axiosInstance } from "../lib/axios"
 
-// Simple throttle helper (no dependencies)
-function throttle(func, limit) {
-  let lastFunc
-  let lastRan
-  return function (...args) {
-    if (!lastRan) {
-      func.apply(this, args)
-      lastRan = Date.now()
-    } else {
-      clearTimeout(lastFunc)
-      lastFunc = setTimeout(() => {
-        if (Date.now() - lastRan >= limit) {
-          func.apply(this, args)
-          lastRan = Date.now()
-        }
-      }, limit - (Date.now() - lastRan))
-    }
-  }
-}
-
-const MAX_MESSAGES = 100 // Limit to last 100 messages
-
 const ChatPage = () => {
   const { id: chatUserId } = useParams()
   const navigate = useNavigate()
@@ -46,25 +24,21 @@ const ChatPage = () => {
   const scrollContainerRef = useRef(null)
   const match = matches.find((m) => m?._id === chatUserId)
 
-  // Limit messages rendered to last MAX_MESSAGES to avoid lag
-  const displayedMessages = messages.slice(-MAX_MESSAGES)
-
   useEffect(() => {
     if (scrollContainerRef.current) {
       scrollContainerRef.current.scrollTop = scrollContainerRef.current.scrollHeight
     }
-  }, [displayedMessages.length]) // only watch limited messages
+  }, [messages.length])
 
   useEffect(() => {
     const container = scrollContainerRef.current
     if (!container) return
 
-    // Throttle scroll handler to run at most every 100ms
-    const handleScroll = throttle(() => {
+    const handleScroll = () => {
       const diff = container.scrollHeight - container.scrollTop - container.clientHeight
       const isAtBottom = diff < 50
       setShowScrollButton(!isAtBottom)
-    }, 100)
+    }
 
     container.addEventListener("scroll", handleScroll)
     return () => container.removeEventListener("scroll", handleScroll)
@@ -193,7 +167,6 @@ const ChatPage = () => {
                     className="w-12 h-12 rounded-full ring-2 ring-slate-500/40 shadow-lg flex-shrink-0"
                     whileHover={{ scale: 1.05 }}
                     transition={{ duration: 0.3, ease: "easeOut" }}
-                    loading="lazy"
                   />
                   <div className="absolute -bottom-1 -right-1 w-4 h-4 bg-emerald-500 rounded-full border-2 border-slate-900 shadow-sm" />
                 </div>
@@ -223,116 +196,114 @@ const ChatPage = () => {
       </motion.div>
 
       {/* Enhanced Messages Container */}
-      <motion.div
-        ref={scrollContainerRef}
-        className="relative flex-1 overflow-y-auto px-3 lg:px-6 py-6 space-y-3 scrollbar-thin scrollbar-thumb-slate-600/40 scrollbar-track-transparent bg-slate-900/20 backdrop-blur-sm border-x border-slate-700/25 rounded-t-2xl shadow-inner shadow-slate-950/30 max-w-4xl mx-auto"
-        initial={{ opacity: 0 }}
-        animate={{ opacity: 1 }}
-        transition={{ duration: 0.6, delay: 0.2 }}
-      >
-        {displayedMessages.length === 0 ? (
-          <EmptyChat match={match} />
-        ) : (
-          <AnimatePresence>
-            {displayedMessages.map((msg, index) => {
-              const isOwn = msg.sender === authUser._id
-              const showAvatar = !isOwn && (index === 0 || displayedMessages[index - 1]?.sender !== msg.sender)
-              const isLastInGroup = index === displayedMessages.length - 1 || displayedMessages[index + 1]?.sender !== msg.sender
-              const showTimestamp =
-                isLastInGroup ||
-                (index < displayedMessages.length - 1 &&
-                  new Date(displayedMessages[index + 1]?.createdAt) - new Date(msg.createdAt) > 300000)
+      <div className="flex flex-col flex-grow relative z-10 max-w-4xl mx-auto w-full overflow-hidden px-4">
+        <motion.div
+          ref={scrollContainerRef}
+          className="relative flex-1 overflow-y-auto px-3 lg:px-6 py-6 space-y-3 scrollbar-thin scrollbar-thumb-slate-600/40 scrollbar-track-transparent bg-slate-900/20 backdrop-blur-sm border-x border-slate-700/25 rounded-t-2xl shadow-inner shadow-slate-950/30"
+          initial={{ opacity: 0 }}
+          animate={{ opacity: 1 }}
+          transition={{ duration: 0.6, delay: 0.2 }}
+        >
+          {messages.length === 0 ? (
+            <EmptyChat match={match} />
+          ) : (
+            <AnimatePresence>
+              {messages.map((msg, index) => {
+                const isOwn = msg.sender === authUser._id
+                const showAvatar = !isOwn && (index === 0 || messages[index - 1]?.sender !== msg.sender)
+                const isLastInGroup = index === messages.length - 1 || messages[index + 1]?.sender !== msg.sender
+                const showTimestamp =
+                  isLastInGroup ||
+                  (index < messages.length - 1 &&
+                    new Date(messages[index + 1]?.createdAt) - new Date(msg.createdAt) > 300000)
 
-              // Animate only the newest message to reduce lag
-              const shouldAnimate = index === displayedMessages.length - 1
-
-              return (
-                <motion.div
-                  key={`${msg._id}-${msg.createdAt}`}
-                  initial={shouldAnimate ? { opacity: 0, y: 15, scale: 0.98 } : {}}
-                  animate={shouldAnimate ? { opacity: 1, y: 0, scale: 1 } : { opacity: 1, y: 0, scale: 1 }}
-                  exit={shouldAnimate ? { opacity: 0, y: -15, scale: 0.98 } : {}}
-                  transition={{
-                    duration: shouldAnimate ? 0.4 : 0,
-                    ease: "easeOut",
-                    delay: shouldAnimate ? index * 0.03 : 0,
-                  }}
-                  className={`group flex items-end gap-3 py-2 px-3 rounded-xl hover:bg-slate-800/15 transition-all duration-300 ${
-                    isOwn ? "justify-end" : "justify-start"
-                  }`}
-                >
-                  {!isOwn && showAvatar && (
-                    <motion.div
-                      className="w-8 flex justify-center"
-                      whileHover={{ scale: 1.05 }}
-                      transition={{ duration: 0.2 }}
-                    >
-                      <img
-                        src={match.image || "/avatar.png"}
-                        alt={match.name}
-                        className="w-8 h-8 rounded-full ring-1 ring-slate-600/40 shadow-md"
-                        loading="lazy"
-                      />
-                    </motion.div>
-                  )}
-                  <div className={`flex flex-col ${isOwn ? "items-end" : "items-start"} max-w-md lg:max-w-lg`}>
-                    <motion.div
-                      className={`relative px-4 py-3 rounded-2xl shadow-lg border backdrop-blur-sm transition-all duration-300 group-hover:shadow-xl ${
-                        isOwn
-                          ? "bg-gradient-to-br from-slate-700/90 to-slate-600/90 text-slate-100 border-slate-500/30 rounded-br-md shadow-slate-800/40"
-                          : "bg-slate-800/70 text-slate-100 border-slate-600/30 rounded-bl-md shadow-slate-900/40"
-                      } ${isLastInGroup ? "mb-1" : "mb-0.5"}`}
-                      whileHover={shouldAnimate ? { scale: 1.01, y: -1 } : {}}
-                      transition={{ duration: 0.2, ease: "easeOut" }}
-                    >
-                      <p
-                        className="text-sm break-words leading-relaxed font-medium"
-                        style={{ whiteSpace: "pre-wrap" }}
+                return (
+                  <motion.div
+                    key={`${msg._id}-${msg.createdAt}`}
+                    initial={{ opacity: 0, y: 15, scale: 0.98 }}
+                    animate={{ opacity: 1, y: 0, scale: 1 }}
+                    exit={{ opacity: 0, y: -15, scale: 0.98 }}
+                    transition={{
+                      duration: 0.4,
+                      ease: "easeOut",
+                      delay: index * 0.03,
+                    }}
+                    className={`group flex items-end gap-3 py-2 px-3 rounded-xl hover:bg-slate-800/15 transition-all duration-300 ${
+                      isOwn ? "justify-end" : "justify-start"
+                    }`}
+                  >
+                    {!isOwn && showAvatar && (
+                      <motion.div
+                        className="w-8 flex justify-center"
+                        whileHover={{ scale: 1.05 }}
+                        transition={{ duration: 0.2 }}
                       >
-                        {msg.content}
-                      </p>
-
-                      {/* Refined Message status indicator */}
-                      {isOwn && (
-                        <div className="absolute -bottom-1 -right-1 w-4 h-4 bg-emerald-500 rounded-full border-2 border-slate-100 text-xs flex items-center justify-center shadow-sm">
-                          ✓
-                        </div>
-                      )}
-                    </motion.div>
-
-                    <AnimatePresence>
-                      {showTimestamp && (
-                        <motion.div
-                          className="flex items-center gap-2 mt-2 px-2 opacity-0 group-hover:opacity-100 text-xs text-slate-400 transition-opacity duration-300"
-                          initial={{ opacity: 0, y: -8 }}
-                          animate={{ opacity: 1, y: 0 }}
-                          exit={{ opacity: 0, y: -8 }}
+                        <img
+                          src={match.image || "/avatar.png"}
+                          alt={match.name}
+                          className="w-8 h-8 rounded-full ring-1 ring-slate-600/40 shadow-md"
+                        />
+                      </motion.div>
+                    )}
+                    <div className={`flex flex-col ${isOwn ? "items-end" : "items-start"} max-w-md lg:max-w-lg`}>
+                      <motion.div
+                        className={`relative px-4 py-3 rounded-2xl shadow-lg border backdrop-blur-sm transition-all duration-300 group-hover:shadow-xl ${
+                          isOwn
+                            ? "bg-gradient-to-br from-slate-700/90 to-slate-600/90 text-slate-100 border-slate-500/30 rounded-br-md shadow-slate-800/40"
+                            : "bg-slate-800/70 text-slate-100 border-slate-600/30 rounded-bl-md shadow-slate-900/40"
+                        } ${isLastInGroup ? "mb-1" : "mb-0.5"}`}
+                        whileHover={{ scale: 1.01, y: -1 }}
+                        transition={{ duration: 0.2, ease: "easeOut" }}
+                      >
+                        <p
+                          className="text-sm break-words leading-relaxed font-medium"
+                          style={{ whiteSpace: "pre-wrap" }}
                         >
-                          <Clock size={12} />
-                          {formatTime(msg.createdAt)}
-                        </motion.div>
-                      )}
-                    </AnimatePresence>
-                  </div>
-                </motion.div>
-              )
-            })}
-          </AnimatePresence>
-        )}
-      </motion.div>
+                          {msg.content}
+                        </p>
 
-      {/* Refined Message Input */}
-      <motion.div
-        className="relative px-3 py-4 max-w-4xl mx-auto w-full"
-        initial={{ y: 100, opacity: 0 }}
-        animate={{ y: 0, opacity: 1 }}
-        transition={{ duration: 0.6, delay: 0.3 }}
-      >
-        <div className="absolute inset-0 bg-slate-900/80 backdrop-blur-xl shadow-2xl rounded-b-2xl border-x border-b border-slate-700/30 shadow-slate-950/50" />
-        <div className="relative">
-          <MessageInput match={match} />
-        </div>
-      </motion.div>
+                        {/* Refined Message status indicator */}
+                        {isOwn && (
+                          <div className="absolute -bottom-1 -right-1 w-4 h-4 bg-emerald-500 rounded-full border-2 border-slate-100 text-xs flex items-center justify-center shadow-sm">
+                            ✓
+                          </div>
+                        )}
+                      </motion.div>
+
+                      <AnimatePresence>
+                        {showTimestamp && (
+                          <motion.div
+                            className="flex items-center gap-2 mt-2 px-2 opacity-0 group-hover:opacity-100 text-xs text-slate-400 transition-opacity duration-300"
+                            initial={{ opacity: 0, y: -8 }}
+                            animate={{ opacity: 1, y: 0 }}
+                            exit={{ opacity: 0, y: -8 }}
+                          >
+                            <Clock size={12} />
+                            {formatTime(msg.createdAt)}
+                          </motion.div>
+                        )}
+                      </AnimatePresence>
+                    </div>
+                  </motion.div>
+                )
+              })}
+            </AnimatePresence>
+          )}
+        </motion.div>
+
+        {/* Refined Message Input */}
+        <motion.div
+          className="relative px-3 py-4 max-w-4xl mx-auto w-full"
+          initial={{ y: 100, opacity: 0 }}
+          animate={{ y: 0, opacity: 1 }}
+          transition={{ duration: 0.6, delay: 0.3 }}
+        >
+          <div className="absolute inset-0 bg-slate-900/80 backdrop-blur-xl shadow-2xl rounded-b-2xl border-x border-b border-slate-700/30 shadow-slate-950/50" />
+          <div className="relative">
+            <MessageInput match={match} />
+          </div>
+        </motion.div>
+      </div>
     </div>
   )
 }
@@ -365,7 +336,6 @@ const EmptyChat = ({ match }) => (
           src={match.image || "/avatar.png"}
           alt={match.name}
           className="w-24 h-24 rounded-full mx-auto ring-4 ring-slate-500/40 shadow-2xl"
-          loading="lazy"
         />
         <motion.div
           className="absolute -bottom-2 -right-2 w-8 h-8 bg-gradient-to-r from-emerald-500 to-emerald-600 rounded-full border-4 border-slate-900 flex items-center justify-center shadow-lg"
