@@ -211,12 +211,7 @@ export const Header = () => {
             >
               Privacy & Policy
             </Link>
-            <Link
-              to="/about"
-              className="text-slate-300 hover:text-white font-medium transition-all duration-200 px-4 py-2 rounded-lg hover:bg-slate-700/50 border border-transparent hover:border-slate-600/50"
-            >
-              About Me
-            </Link>
+           
 
             {authUser ? (
               <div className="relative" ref={dropdownRef}>
