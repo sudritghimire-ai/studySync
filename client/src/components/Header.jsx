@@ -112,13 +112,7 @@ export const Header = () => {
                     >
                       Privacy & Policy
                     </Link>
-                    <Link
-                      to="/about"
-                      className="relative flex items-center px-4 py-3 text-sm text-slate-200 hover:text-white hover:bg-slate-700/30 transition-all duration-200 border-b border-slate-700/30"
-                      onClick={() => setMobileMenuOpen(false)}
-                    >
-                      About Me
-                    </Link>
+                    
 
                     {/* User Section in Mobile Menu */}
                     {authUser ? (
